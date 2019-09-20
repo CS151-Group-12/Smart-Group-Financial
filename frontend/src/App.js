@@ -1,6 +1,6 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
   return (
@@ -10,6 +10,17 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <form>
+          <label>
+            Name:
+            <input type="text" name="name" />
+          </label>
+          <label>
+            Passowrd:
+            <input type="text" name="name" />
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
         <a
           className="App-link"
           href="https://reactjs.org"
