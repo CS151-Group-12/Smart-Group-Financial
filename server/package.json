@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "ENV=prod node -r esm app.js",
+    "start": "node -r esm app.js",
     "dev": "ENV=dev nodemon -r esm app.js"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
-    "eslint-plugin-react-hooks": "^1.7.0"
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "nodemon": "^1.19.2"
   }
 }
