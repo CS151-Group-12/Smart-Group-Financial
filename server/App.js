@@ -15,6 +15,16 @@ import {
   userController,
 } from './controller';
 
+import {
+  con
+} from './database/mysql'
+
+//Connect to database test
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected to mysql!");
+});
+
 var app = express();
 
 // Apply strategy to passport
