@@ -16,14 +16,8 @@ import {
 } from './controller';
 
 import {
-  con
+  connection
 } from './database/mysql'
-
-//Connect to database test
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected to mysql!");
-});
 
 var app = express();
 
@@ -45,9 +39,24 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  return res.status(200).json({
-    status: 'Home page success',
-    data: 'test',
+  connection.getConnection( (err, tempCon) => {
+    if(err){
+      // tempCon.release();
+      console.log('Error: '+err);
+    } else{
+      console.log('Connected to db!');
+  
+      tempCon.query('SELECT * from GOT', (err, rows, fields) => {
+        tempCon.release();
+        if (err){
+          console.log('Error while performing Query.'+err);
+        } else {
+          rows.forEach((row) => console.log(row.firstName));
+          //console.log(rows);
+          res.json(rows);
+        }
+      });
+    }
   });
 });
 

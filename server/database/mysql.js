@@ -5,4 +5,4 @@ import {
 } from './config';
 
 //Initialize connection to MySQL 
-export const con = mysql.createConnection(credential);
+export const connection = mysql.createPool(credential);
