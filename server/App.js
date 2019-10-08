@@ -59,21 +59,20 @@ app.get('/', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
+  const { email, password } = req.body;
   connection.getConnection((err, tempCon) => {
     if (err) {
       res.status(500).json(err);
       console.log('Error: ' + err);
     } else {
-      console.log('Insert Calvin to db');
-
       tempCon.query(
-        `insert into GOT values(null, 'Calvin', 'Nguyen')`,
+        `insert into user values('${email}', '${password}')`,
         (err, token) => {
           if (err) {
             res.status(500).json(err);
             console.log('Error while performing Query.' + err);
           } else {
-            tempCon.query('SELECT * from GOT', (error, data) => {
+            tempCon.query('SELECT * from user', (error, data) => {
               tempCon.release();
               if (error) {
                 res.status(500).json(err);

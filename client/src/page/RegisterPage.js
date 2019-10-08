@@ -26,7 +26,6 @@ class RegisterPage extends Component {
   onClick = e => {
     e.preventDefault();
 
-    console.log('Clicked');
     this.props.attemptRegister({
       email: this.state.email,
       password: this.state.password
@@ -39,24 +38,11 @@ class RegisterPage extends Component {
     const password = { ...this.state.password };
     const user = this.props.user || {};
 
-    // const userList = user.data;
-    console.log('render');
-    console.log(user.data);
-
-    // const userList = user.data.map(user => (
-    //   <div>
-    //     <p>{user.firstname}</p>
-    //     <p>{user.lastname}</p>
-    //   </div>
-    // ));
-
     return user.data ? (
       <div className='container'>
         <h1>List of User</h1>
         {user.data.map(user => (
-          <li key={user.id}>
-            Name: {user.firstName} {user.lastName}
-          </li>
+          <li key={user.id}>Name: {user.email}</li>
         ))}
       </div>
     ) : (
