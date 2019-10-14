@@ -6,6 +6,7 @@ import createError from 'http-errors';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import passport from 'passport';
+import bcrypt from 'bcrypt-nodejs'
 
 import { config } from './config/global';
 
@@ -44,7 +45,7 @@ app.get('/', (req, res) => {
     } else {
       console.log('Connected to db! Login');
 
-      tempCon.query('SELECT * from GOT', (err, data, fields) => {
+      tempCon.query('SELECT * from user', (err, data, fields) => {
         tempCon.release();
         if (err) {
           console.log('Error while performing Query.' + err);
@@ -65,27 +66,41 @@ app.post('/register', (req, res) => {
       res.status(500).json(err);
       console.log('Error: ' + err);
     } else {
-      tempCon.query(
-        `insert into user values('${email}', '${password}')`,
-        (err, token) => {
-          if (err) {
-            res.status(500).json(err);
-            console.log('Error while performing Query.' + err);
-          } else {
-            tempCon.query('SELECT * from user', (error, data) => {
-              tempCon.release();
-              if (error) {
-                res.status(500).json(err);
-                console.log('Error while retrieveing data: ' + err);
-              } else {
-                const returnData = { ...{ data } };
-                console.log(returnData);
-                res.status(200).json(returnData);
-              }
-            });
-          }
+      bcrypt.genSalt(5, (err, salt) => {
+        if(err){
+          console.log('genSalt error: ' + err);
+        } else {
+          console.log(salt)
+          bcrypt.hash(password, salt, null, (err, hash) => {
+            if(err){
+              console.log('hash error: ' + err);
+            } else {
+              console.log(hash)
+              tempCon.query(
+                `insert into user values('${email}', '${hash}')`,
+                (err, token) => {
+                  if (err) {
+                    res.status(500).json(err);
+                    console.log('Error while performing Query.' + err);
+                  } else {
+                    tempCon.query('SELECT * from user', (error, data) => {
+                      tempCon.release();
+                      if (error) {
+                        res.status(500).json(err);
+                        console.log('Error while retrieveing data: ' + err);
+                      } else {
+                        const returnData = { ...{ data } };
+                        console.log(returnData);
+                        res.status(200).json(returnData);
+                      }
+                    });
+                  }
+                }
+              );
+            }
+          });
         }
-      );
+      });
     }
   });
 });
