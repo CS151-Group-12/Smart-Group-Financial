@@ -1,32 +1,17 @@
-import express from 'express';
-import logger from 'winston';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import createError from 'http-errors';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import passport from 'passport';
-import bcrypt from 'bcrypt-nodejs'
+import express from "express";
+import logger from "winston";
+import path from "path";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import cors from "cors";
+import mysql from "mysql";
+import { config } from "./global";
+import { userController } from "./controller";
 
-import { config } from './config/global';
+const app = express();
 
-import { userController } from './controller';
-
-import { connection } from './database/mysql';
-
-var app = express();
-
-// Apply strategy to passport
-// applyPassportStrategy(passport);
-
-app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: false
-  })
-);
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(
   bodyParser.urlencoded({
     extended: true
@@ -36,99 +21,16 @@ app.use(bodyParser.json());
 
 // Set up CORS
 app.use(cors());
-
-app.get('/', (req, res) => {
-  connection.getConnection((err, tempCon) => {
-    if (err) {
-      // tempCon.release();
-      console.log('Error: ' + err);
-    } else {
-      console.log('Connected to db! Login');
-
-      tempCon.query('SELECT * from user', (err, data, fields) => {
-        tempCon.release();
-        if (err) {
-          console.log('Error while performing Query.' + err);
-        } else {
-          const returnData = { ...data };
-          console.log(returnData);
-          res.status(200).json(returnData);
-        }
-      });
-    }
-  });
-});
-
-app.post('/register', (req, res) => {
-  const { email, password } = req.body;
-  connection.getConnection((err, tempCon) => {
-    if (err) {
-      res.status(500).json(err);
-      console.log('Error: ' + err);
-    } else {
-      bcrypt.genSalt(5, (err, salt) => {
-        if(err){
-          console.log('genSalt error: ' + err);
-        } else {
-          console.log(salt)
-          bcrypt.hash(password, salt, null, (err, hash) => {
-            if(err){
-              console.log('hash error: ' + err);
-            } else {
-              console.log(hash)
-              tempCon.query(
-                `insert into user values('${email}', '${hash}')`,
-                (err, token) => {
-                  if (err) {
-                    res.status(500).json(err);
-                    console.log('Error while performing Query.' + err);
-                  } else {
-                    tempCon.query('SELECT * from user', (error, data) => {
-                      tempCon.release();
-                      if (error) {
-                        res.status(500).json(err);
-                        console.log('Error while retrieveing data: ' + err);
-                      } else {
-                        const returnData = { ...{ data } };
-                        console.log(returnData);
-                        res.status(200).json(returnData);
-                      }
-                    });
-                  }
-                }
-              );
-            }
-          });
-        }
-      });
-    }
-  });
-});
-
-app.use('/users', userController);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
+app.use("/", userController);
 /**
  * Get port from environment and store in Express.
  */
-const { port } = config.env;
+const { env, credential } = config;
 
-app.listen(port, () => {
-  logger.info(`Started successfully server at port ${port}`);
-  // Connect MySQL
+app.listen(env.port, () => {
+  logger.info(`Started successfully server at port ${env.port}`);
+  mysql.createPool(credential).getConnection((err, db) => {
+    global.db = db;
+    logger.info(`Database status: ${db.state} successfully`);
+  });
 });

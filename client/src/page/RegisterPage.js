@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Redirect, withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Redirect, withRouter } from "react-router-dom";
 
-import { attemptRegister } from '../actions/register/registerApiCall';
+import { attemptRegister } from "../actions/register/registerApiCall";
 
-import Register from '../components/auth/Register.js';
+import Register from "../components/auth/Register.js";
 
 class RegisterPage extends Component {
   constructor() {
     super();
     this.state = {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       errors: {}
     };
     this.onChange = this.onChange.bind(this);
@@ -38,12 +38,10 @@ class RegisterPage extends Component {
     const password = { ...this.state.password };
     const user = this.props.user || {};
 
-    return user.data ? (
-      <div className='container'>
-        <h1>List of User</h1>
-        {user.data.map(user => (
-          <li key={user.id}>Name: {user.email}</li>
-        ))}
+    return user.email ? (
+      <div className="container">
+        <h1>User Register</h1>
+        Email: {user.email}
       </div>
     ) : (
       <Register

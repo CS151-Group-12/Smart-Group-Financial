@@ -2,7 +2,7 @@ import {
   ATTEMPT_REGISTER_SUCCESSFULLY,
   ATTEMPT_REGISTER_FAILED,
   GET_ERRORS
-} from '../constant';
+} from "../constant";
 
 export default function(state = { loading: false, errors: null }, action) {
   switch (action.type) {
