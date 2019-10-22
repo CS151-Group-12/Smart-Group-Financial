@@ -6,8 +6,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import mysql from "mysql";
 import { config } from "./global";
-import { userController } from "./controller";
-
+import { userController, eventController, groupController } from "./controller";
 const app = express();
 
 app.use(cookieParser());
@@ -22,6 +21,9 @@ app.use(bodyParser.json());
 // Set up CORS
 app.use(cors());
 app.use("/", userController);
+app.use("/event", eventController);
+app.use("/group", groupController);
+
 /**
  * Get port from environment and store in Express.
  */

@@ -1,5 +1,5 @@
-import userController from './user.controller';
+import userController from "./user.controller";
+import eventController from "./event.controller";
+import groupController from "./group.controller";
 
-export {
-  userController,
-};
+export { eventController, groupController, userController };
