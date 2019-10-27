@@ -1,5 +1,5 @@
 import userController from "./user.controller";
 import eventController from "./event.controller";
-import groupController from "./group.controller";
+import partyController from "./party.controller";
 
-export { eventController, groupController, userController };
+export { eventController, partyController, userController };

@@ -15,6 +15,10 @@ userController.get("/", (req, res) => {
   });
 });
 
+userController.post("/", (req, res) => {
+  res.status(200).json({ data: "" });
+});
+
 userController.post("/register", (req, res) => {
   const { email, password } = req.body;
 
@@ -22,7 +26,7 @@ userController.post("/register", (req, res) => {
     const createUserQuery = `insert into User(email, password) values('${email}', '${hashedPassword}')`;
     db.query(createUserQuery, (err2, createdUser) => {
       if (err2) res.status(500).json(err2);
-      else res.status(200).json({ email });
+      else res.status(200).json({ createdUser });
     });
   });
 });
