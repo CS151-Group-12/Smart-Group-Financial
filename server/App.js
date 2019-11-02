@@ -1,10 +1,13 @@
 import express from "express";
+// import session from "express-session";
 import logger from "winston";
 import path from "path";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mysql from "mysql";
+import passport from "passport";
+import { applyPassportStrategy } from "./auth/passport";
 import { config } from "./global";
 import { userController, eventController, partyController } from "./controller";
 const app = express();
@@ -17,6 +20,10 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
+
+applyPassportStrategy(passport);
 
 // Set up CORS
 app.use(cors());

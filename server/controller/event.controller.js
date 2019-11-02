@@ -35,7 +35,7 @@ eventController.post("/", (req, res) => {
       return res.status(500).json({ data: "Create Event fail" });
 
     // Add User and Event into Owner_Create_Event
-    const ownerCreateEvent = `INSERT INTO Owner_Create_Event VALUES('${userID}', ${createdEvent.insertId})`;
+    const ownerCreateEvent = `INSERT INTO User_Create_Event VALUES('${userID}', ${createdEvent.insertId})`;
 
     db.query(ownerCreateEvent, (ownerCreateEventErr, data, ownerFields) => {
       if (ownerCreateEventErr) return res.status(500).json(ownerCreateEventErr);
