@@ -21,12 +21,12 @@ userController.post("/", (req, res) => {
 
 userController.post("/register", (req, res) => {
   const { email, password } = req.body;
-  
+
   bcrypt.hash(password, 10, (err, hashedPassword) => {
     const createUserQuery = `insert into User(email, password) values('${email}', '${hashedPassword}')`;
-    db.query(createUserQuery, (err2, createdUser) => {
+    db.query(createUserQuery, (err2, createdUser, fields) => {
       if (err2) res.status(500).json(err2);
-      else res.status(200).json({ createdUser });
+      else res.status(200).json({ ...createdUser });
     });
   });
 });
@@ -38,16 +38,16 @@ userController.get("/login-failed", (req, res) => {
 userController.post(
   "/login",
   passport.authenticate("local", {
-    successRedirect: "/",
     failureRedirect: "/login-failed"
   }),
   (req, res) => {
-    if (req.body.remember) {
-      req.session.cookie.maxAge = 1000 * 60 * 3;
-    } else {
-      req.session.cookie.expires = false;
-    }
-    res.redirect("/");
+    const { email } = req.body;
+    console.log(email);
+    const getUserIdentityQuery = `SELECT id FROM User WHERE email like '${email}'`;
+    db.query(getUserIdentityQuery, (err2, foundUser) => {
+      if (err2) res.status(500).json(err2);
+      else res.status(200).json({ foundUser });
+    });
   }
 );
 

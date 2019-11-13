@@ -1,0 +1,26 @@
+import React, { Component } from "react";
+import { connect } from "react-redux";
+
+import { BrowserRouter as Router } from "react-router-dom";
+
+import RoutesComponent from "./RoutesComponent";
+
+class RouterComponent extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const user = this.props.user || {};
+
+    return (
+      <Router basename={"/"}>
+        <div>
+          <RoutesComponent isLogin={this.props.isLogin} user={user} />
+        </div>
+      </Router>
+    );
+  }
+}
+
+export default connect()(RouterComponent);

@@ -1,30 +1,67 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { connect } from "react-redux";
 
-// Components
-import Navbar from './page/NavBar';
-import Landing from './page/Landing';
+import { bindActionCreators } from "redux";
 
-// Page
-import RegisterPage from './page/RegisterPage';
+import Navbar from "./components/Navbar";
 
-import { Provider } from 'react-redux';
-import store from './store';
+import RouterComponent from "./route/RouterCompnent.js";
+
+import { setUserToken } from "./actions/setUserTokenAction";
+
+import { getUserIdentity } from "./actions/getUserIdentity";
+
+import { USER_ID } from "./constant";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentWillMount() {
+    const userID = localStorage.getItem(USER_ID);
+    console.log("get token");
+    if (userID) {
+      console.log(`has token ${userID}`);
+      this.props.setUserToken({
+        userID
+      });
+
+      this.props.getUserIdentity(userID);
+    }
+  }
+
   render() {
+    const user = this.props.user || {};
+    const isLogin = user.insertId ? true : false;
+
     return (
-      <Provider store={store}>
-        <Router>
-          <div className='App'>
-            <Navbar />
-            <Route exact path='/' component={Landing} />
-            <Route exact path='/register' component={RegisterPage} />
-          </div>
-        </Router>
-      </Provider>
+      <div>
+        <Navbar />
+        <RouterComponent isLogin={isLogin} user={user} />
+      </div>
     );
   }
 }
-export default App;
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      getUserIdentity: getUserIdentity,
+      setUserToken: setUserToken
+    },
+    dispatch
+  );
+}
+
+export default connect(
+  mapStateToProps,
+  matchDispatchToProps
+)(App);

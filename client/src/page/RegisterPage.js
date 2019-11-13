@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Redirect, withRouter } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  withRouter
+} from "react-router-dom";
 
 import { attemptRegister } from "../actions/register/registerApiCall";
 
@@ -37,12 +41,11 @@ class RegisterPage extends Component {
     const email = { ...this.state.email };
     const password = { ...this.state.password };
     const user = this.props.user || {};
+    const { insertId } = user;
+    console.log(user);
 
-    return user.email ? (
-      <div className="container">
-        <h1>User Register</h1>
-        Email: {user.email}
-      </div>
+    return user.insertId ? (
+      <Redirect to="/" />
     ) : (
       <Register
         onChange={e => this.onChange(e)}
