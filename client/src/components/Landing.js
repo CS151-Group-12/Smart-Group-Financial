@@ -34,7 +34,7 @@ const Landing = props => {
                 borderRadius: "3px",
                 letterSpacing: "1.5px"
               }}
-              className="btn btn-large btn-flat waves-effect white black-text"
+              className="btn btn-large waves-effect waves-light hoverable blue accent-3"
             >
               Log In
             </Link>

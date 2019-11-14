@@ -5,6 +5,7 @@ import { Route } from "react-router-dom";
 
 import LandingPage from "../page/LandingPage";
 import RegisterPage from "../page/RegisterPage";
+import LoginPage from "../page/LoginPage";
 
 class RoutesComponent extends Component {
   convertToPrivateComponent(component) {
@@ -22,6 +23,7 @@ class RoutesComponent extends Component {
       <div>
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/register" component={RegisterPage} />
+        <Route exact path="/login" component={LoginPage} />
       </div>
     );
   }

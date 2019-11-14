@@ -28,6 +28,7 @@ class RoutesComponent extends Component {
           component={this.convertToPrivateComponent(Landing)}
         />
         <Route exact path="/register" component={RegisterPage} />
+        <Route exact path="/login" component={LoginPage} />
       </div>
     );
   }

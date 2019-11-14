@@ -4,7 +4,9 @@ import {
   GET_ERRORS,
   GET_USER_IDENTITY_SUCCESSFULLY,
   GET_USER_IDENTITY_FAILED,
-  SET_USER_ID
+  SET_USER_ID,
+  ATTEMPT_LOGIN_SUCCESSFULLY,
+  ATTEMPT_LOGIN_FAILED
 } from "../constant";
 
 export default function(state = { loading: false, errors: null }, action) {
@@ -16,6 +18,10 @@ export default function(state = { loading: false, errors: null }, action) {
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case GET_USER_IDENTITY_SUCCESSFULLY:
       return { ...state, ...action.payload, ...{ isLoading: false } };
+    case ATTEMPT_LOGIN_SUCCESSFULLY:
+      return { ...state, ...action.payload, ...{ loading: false } };
+    case ATTEMPT_LOGIN_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case GET_USER_IDENTITY_FAILED:
       return {};
     case SET_USER_ID:
