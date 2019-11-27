@@ -18,6 +18,44 @@ partyController.get("/", (req, res) => {
 });
 
 /**
+ * GET/
+ * Get ALL groups in the DB
+ */
+partyController.get("/members", (req, res) => {
+  const partyID = req.body.partyID;
+  
+  const getPartyMembersQuery = `SELECT email FROM User 
+                                JOIN (SELECT userID FROM User_Join_Party WHERE User_Join_Party.partyID=${partyID})a
+                                USING(userID)`;
+
+  db.query(getPartyMembersQuery, (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const returnData = [ ...data ];
+      res.status(200).json(returnData);
+    }
+  });
+});
+
+partyController.get("/events", (req, res) => {
+  const partyID = req.body.partyID;
+  
+  const getPartyMembersQuery = `SELECT name, startDate, endDate FROM Events 
+                                JOIN (SELECT eventID FROM Party_Has_Event WHERE Part_Has_Event.partyID=${partyID})a
+                                USING(eventID)`;
+
+  db.query(getPartyMembersQuery, (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const returnData = [ ...data ];
+      res.status(200).json(returnData);
+    }
+  });
+});
+
+/**
  * POST/
  * User creates an group:
  * 1. Add a new party to DB
