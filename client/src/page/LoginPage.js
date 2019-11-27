@@ -37,9 +37,10 @@ class LoginPage extends Component {
     const email = { ...this.state.email };
     const password = { ...this.state.password };
     const user = this.props.user || {};
+    console.log("User is: " + user);
 
     return user.email ? (
-      <Redirect to="/" />
+      <Redirect to="/home" />
     ) : (
       <Login
         onChange={e => this.onChange(e)}

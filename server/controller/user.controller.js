@@ -31,8 +31,8 @@ userController.post('/register', (req, res) => {
     db.query(createUserQuery, (err2, createdUser, fields) => {
       if (err2) res.status(500).json(err2);
       else {
-        db.query(getUserByEmailQuery(email), (err2, createdUser, fields) => {
-          res.status(200).json({ ...fields });
+        db.query(getUserByEmailQuery(email), (err2, data, fields) => {
+          res.status(200).json({ ...data });
         });
       }
     });

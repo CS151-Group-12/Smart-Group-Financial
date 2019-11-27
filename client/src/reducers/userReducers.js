@@ -12,8 +12,11 @@ import {
 export default function(state = { loading: false, errors: null }, action) {
   switch (action.type) {
     // Register
-    case ATTEMPT_REGISTER_SUCCESSFULLY:
+    case ATTEMPT_REGISTER_SUCCESSFULLY: {
+      console.log(action.payload + "," + action.type);
       return { ...state, ...action.payload, ...{ loading: false } };
+    }
+
     case ATTEMPT_REGISTER_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case GET_USER_IDENTITY_SUCCESSFULLY:

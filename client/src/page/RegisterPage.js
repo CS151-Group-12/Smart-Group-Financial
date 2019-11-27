@@ -45,7 +45,7 @@ class RegisterPage extends Component {
     console.log(user);
 
     return user.insertId ? (
-      <Redirect to="/" />
+      <Redirect to="/home" />
     ) : (
       <Register
         onChange={e => this.onChange(e)}

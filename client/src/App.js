@@ -6,6 +6,8 @@ import { bindActionCreators } from "redux";
 
 import Navbar from "./components/Navbar";
 
+import CustomNavbar from "./components/headerComponent/CustomNavbar";
+
 import RouterComponent from "./route/RouterCompnent.js";
 
 import { setUserToken } from "./actions/setUserTokenAction";
@@ -61,7 +63,4 @@ function matchDispatchToProps(dispatch) {
   );
 }
 
-export default connect(
-  mapStateToProps,
-  matchDispatchToProps
-)(App);
+export default connect(mapStateToProps, matchDispatchToProps)(App);

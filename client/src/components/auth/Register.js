@@ -10,7 +10,7 @@ const Register = props => {
               <b>Register</b>
             </h4>
             <p className="grey-text text-darken-1">
-              <a href="/login">Already has an account? Login</a>
+              <a href="/login">Already have an account? Login</a>
             </p>
           </div>
           <form noValidate onSubmit={props.onClick}>
