@@ -5,11 +5,11 @@ import bcrypt from 'bcrypt';
 
 export const applyPassportStrategy = passport => {
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.userID);
   });
 
-  passport.deserializeUser((id, done) => {
-    db.query(`SELECT * FROM User WHERE userID like ${id}`, (err, rows) => {
+  passport.deserializeUser((userID, done) => {
+    db.query(`SELECT * FROM User WHERE userID like ${userID}`, (err, rows) => {
       done(err, rows[0]);
     });
   });

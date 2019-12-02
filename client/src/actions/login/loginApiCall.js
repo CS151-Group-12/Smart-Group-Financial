@@ -7,13 +7,18 @@ import {
 
 import { HOST, LOGIN_URI } from '../../constant';
 
+import { setTokenToLocalStorage } from '../../utils';
+
+import { USER_ID } from '../../constant';
+
 // Register
 export const attemptLogin = userData => dispatch => {
   axios
     .post(`${HOST}${LOGIN_URI}`, userData)
     .then(res => {
-      console.log('attempt login callAPI');
-      console.log(res.data);
+      // Set userToken to Local Storage
+      setTokenToLocalStorage(USER_ID, res.data.userID);
+
       const payload = dispatch(attemptLoginSuccessfully(res.data));
       return payload;
     })

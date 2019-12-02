@@ -65,7 +65,7 @@ userController.post(
 
     db.query(getUserByEmailQuery(email), (err2, foundUser) => {
       if (err2) res.status(500).json(err2);
-      else res.status(200).json({ foundUser });
+      else res.status(200).json({ ...foundUser[0] });
     });
   }
 );

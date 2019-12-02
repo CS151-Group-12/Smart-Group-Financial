@@ -17,8 +17,6 @@ export const attemptRegister = userData => dispatch => {
     .post(`${HOST}${REGISTER_URI}`, userData)
     .then(res => {
       // Set userToken to Local Storage
-      console.log('API call success');
-      console.log(res.data);
       setTokenToLocalStorage(USER_ID, res.data.insertId);
 
       dispatch(attemptRegisterSuccessfully(res.data));

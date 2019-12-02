@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { Redirect, withRouter } from "react-router-dom";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Redirect, withRouter } from 'react-router-dom';
 
-import { attemptLogin } from "../actions/login/loginApiCall";
+import { attemptLogin } from '../actions/login/loginApiCall';
 
-import Login from "../components/auth/Login.js";
+import Login from '../components/auth/Login.js';
 
 class LoginPage extends Component {
   constructor() {
     super();
     this.state = {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       errors: {}
     };
     this.onChange = this.onChange.bind(this);
@@ -37,10 +37,11 @@ class LoginPage extends Component {
     const email = { ...this.state.email };
     const password = { ...this.state.password };
     const user = this.props.user || {};
-    console.log("User is: " + user);
+    const { userID } = user;
+    console.log('User is: ' + user);
 
-    return user.email ? (
-      <Redirect to="/home" />
+    return user.email && userID ? (
+      <Redirect to='/home' />
     ) : (
       <Login
         onChange={e => this.onChange(e)}
@@ -56,8 +57,7 @@ class LoginPage extends Component {
 // Store
 function mapStateToProps(state) {
   return {
-    user: state.user,
-    data: state.user.data
+    user: state.user
   };
 }
 
