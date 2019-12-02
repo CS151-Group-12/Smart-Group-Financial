@@ -1,15 +1,15 @@
-import axios from "axios";
+import axios from 'axios';
 
 import {
   attemptRegisterSuccessfully,
   attemptRegisterFailed
-} from "./attemptRegisterAction";
+} from './attemptRegisterAction';
 
-import { HOST, REGISTER_URI } from "../../constant";
+import { HOST, REGISTER_URI } from '../../constant';
 
-import { setTokenToLocalStorage } from "../../utils";
+import { setTokenToLocalStorage } from '../../utils';
 
-import { USER_ID } from "../../constant";
+import { USER_ID } from '../../constant';
 
 // Register
 export const attemptRegister = userData => dispatch => {
@@ -17,14 +17,14 @@ export const attemptRegister = userData => dispatch => {
     .post(`${HOST}${REGISTER_URI}`, userData)
     .then(res => {
       // Set userToken to Local Storage
-      console.log("aPI call success");
+      console.log('API call success');
       console.log(res.data);
       setTokenToLocalStorage(USER_ID, res.data.insertId);
 
       dispatch(attemptRegisterSuccessfully(res.data));
     })
     .catch(err => {
-      console.log("error");
+      console.log('error');
       console.log(err);
       dispatch(attemptRegisterFailed(err));
     });

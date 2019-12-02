@@ -7,16 +7,13 @@ import {
   SET_USER_ID,
   ATTEMPT_LOGIN_SUCCESSFULLY,
   ATTEMPT_LOGIN_FAILED
-} from "../constant";
+} from '../constant';
 
 export default function(state = { loading: false, errors: null }, action) {
   switch (action.type) {
     // Register
-    case ATTEMPT_REGISTER_SUCCESSFULLY: {
-      console.log(action.payload + "," + action.type);
+    case ATTEMPT_REGISTER_SUCCESSFULLY:
       return { ...state, ...action.payload, ...{ loading: false } };
-    }
-
     case ATTEMPT_REGISTER_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case GET_USER_IDENTITY_SUCCESSFULLY:
