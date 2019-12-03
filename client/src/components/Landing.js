@@ -36,7 +36,7 @@ const Landing = props => {
               }}
               className="btn btn-large waves-effect waves-light hoverable blue accent-3"
             >
-              Log In
+              Login
             </Link>
           </div>
         </div>

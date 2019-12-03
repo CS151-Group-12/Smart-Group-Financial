@@ -37,6 +37,9 @@ const Register = props => {
                 name="password"
               />
               {/* <label htmlFor='password'>Password</label> */}
+              <p className="grey-text text-darken-1">
+                <a href="/login">Already has an account? Login</a>
+              </p>
             </div>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <button

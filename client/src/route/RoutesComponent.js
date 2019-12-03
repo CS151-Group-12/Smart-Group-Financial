@@ -6,6 +6,7 @@ import { Route } from "react-router-dom";
 import LandingPage from "../page/LandingPage";
 import RegisterPage from "../page/RegisterPage";
 import LoginPage from "../page/LoginPage";
+import GroupPage from "../page/GroupPage";
 import HomePage from "../page/HomePage";
 
 class RoutesComponent extends Component {
@@ -25,7 +26,7 @@ class RoutesComponent extends Component {
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/login" component={LoginPage} />
-
+        <Route exact path="/group" component={GroupPage} />
         <Route exact path="/home" component={HomePage} />
       </div>
     );

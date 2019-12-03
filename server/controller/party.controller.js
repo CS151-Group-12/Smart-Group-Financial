@@ -21,8 +21,8 @@ partyController.get('/', (req, res) => {
  * GET/
  * Get ALL groups in the DB
  */
-partyController.get('/members', (req, res) => {
-  const partyID = req.body.partyID;
+partyController.post('/members', (req, res) => {
+  const { partyID } = req.body;
 
   const getPartyMembersQuery = `SELECT email FROM User 
                                 JOIN (SELECT userID FROM User_Join_Party WHERE User_Join_Party.partyID=${partyID})a
@@ -38,11 +38,11 @@ partyController.get('/members', (req, res) => {
   });
 });
 
-partyController.get('/events', (req, res) => {
-  const partyID = req.body.partyID;
+partyController.post('/events', (req, res) => {
+  const { partyID } = req.body;
 
-  const getPartyMembersQuery = `SELECT name, startDate, endDate FROM Events 
-                                JOIN (SELECT eventID FROM Party_Has_Event WHERE Part_Has_Event.partyID=${partyID})a
+  const getPartyMembersQuery = `SELECT name, startDate, endDate FROM Event 
+                                JOIN (SELECT eventID FROM Party_Has_Event WHERE Party_Has_Event.partyID=${partyID})a
                                 USING(eventID)`;
 
   db.query(getPartyMembersQuery, (err, data) => {
@@ -114,6 +114,29 @@ partyController.post('/join', (req, res) => {
       return res.status(404).json({ message: `Party Name: ${name} not Found` });
 
     const joinPartyQuery = `INSERT INTO User_Join_Party values('${userID}', '${foundParty[0].id}')`;
+
+    db.query(joinPartyQuery, (err1, data) => {
+      if (err1) return res.status(500).json(err1);
+      return res.status(200).json({ data });
+    });
+  });
+});
+
+/**
+ * POST/
+ * Invite user to party
+ */
+partyController.post('/invite', (req, res) => {
+  const { email, partyID } = req.body;
+
+  const getUserByEmailQuery = `SELECT userID FROM User WHERE email like '${email}'`;
+
+  db.query(getUserByEmailQuery, (err, foundUser) => {
+    if (err) return res.status(500).json(err);
+    else if (foundUser.length == 0)
+      return res.status(404).json({ message: `User Email: ${name} not Found` });
+
+    const joinPartyQuery = `INSERT INTO User_Join_Party values('${foundUser[0].userID}', '${partyID}')`;
 
     db.query(joinPartyQuery, (err1, data) => {
       if (err1) return res.status(500).json(err1);
