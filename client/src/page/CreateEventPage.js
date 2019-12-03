@@ -1,18 +1,6 @@
 import React, { Component } from "react";
 
-class CreateGroupPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      partyID: null
-    };
-  }
-  handleParty = partyID => {
-    this.setState({
-      partyID
-    });
-  };
-
+class CreateEventPage extends Component {
   render() {
     return (
       <div className="center-align">
@@ -25,7 +13,14 @@ class CreateGroupPage extends Component {
               <form className="col s12">
                 <div className="input-field col s12">
                   <input
-                    placeholder="Group Name"
+                    placeholder="Event Name"
+                    type="text"
+                    className="validate"
+                  />
+                </div>
+                <div className="input-field col s12">
+                  <input
+                    placeholder="Event Location"
                     type="text"
                     className="validate"
                   />
@@ -33,7 +28,6 @@ class CreateGroupPage extends Component {
 
                 <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                   <button
-                    onClick={() => this.props.handleParty(this.props.orderID)}
                     style={{
                       width: "120px",
                       borderRadius: "2px",
@@ -43,7 +37,7 @@ class CreateGroupPage extends Component {
                     type="submit"
                     className="btn btn-large waves-effect waves-light hoverable blue accent-3"
                   >
-                    Create Group
+                    Create Event
                   </button>
                 </div>
               </form>
@@ -55,4 +49,4 @@ class CreateGroupPage extends Component {
   }
 }
 
-export default CreateGroupPage;
+export default CreateEventPage;

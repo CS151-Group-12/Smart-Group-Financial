@@ -10,6 +10,8 @@ import GroupPage from '../page/GroupPage';
 import HomePage from '../page/HomePage';
 import EventPage from '../page/EventPage';
 import CreateNewCategory from '../components/CreateNewCategory';
+import CreateGroupPage from '../page/CreateGroupPage';
+import CreateEventPage from '../page/CreateEventPage';
 
 class RoutesComponent extends Component {
   convertToPrivateComponent(component) {
@@ -53,6 +55,8 @@ class RoutesComponent extends Component {
           path='/party/:partyID'
           component={this.convertToPrivateComponent(GroupPage)}
         />
+        <Route exact path='/creategroup' component={CreateGroupPage} />
+        <Route exact path='/createevent' component={CreateEventPage} />
       </div>
     );
   }
