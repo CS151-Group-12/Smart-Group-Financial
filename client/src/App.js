@@ -1,20 +1,20 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 
-import Navbar from "./components/Navbar";
+import Navbar from './components/Navbar';
 
-import CustomNavbar from "./components/headerComponent/CustomNavbar";
+import CustomNavbar from './components/headerComponent/CustomNavbar';
 
-import RouterComponent from "./route/RouterCompnent.js";
+import RouterComponent from './route/RouterCompnent.js';
 
-import { setUserToken } from "./actions/setUserTokenAction";
+import { setUserToken } from './actions/setUserTokenAction';
 
-import { getUserIdentity } from "./actions/getUserIdentity";
+import { getUserIdentity } from './actions/getUserIdentity';
 
-import { USER_ID } from "./constant";
+import { USER_ID } from './constant';
 
 class App extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class App extends Component {
 
   componentWillMount() {
     const userID = localStorage.getItem(USER_ID);
-    console.log("get token");
+    console.log('get token');
     if (userID) {
       console.log(`has token ${userID}`);
       this.props.setUserToken({
@@ -37,9 +37,14 @@ class App extends Component {
 
   render() {
     const user = this.props.user || {};
-    const isLogin = user.insertId ? true : false;
+    const isLogin = user.userID ? true : false;
 
-    return (
+    return isLogin ? (
+      <div>
+        <CustomNavbar onClick={this.logout} />
+        <RouterComponent isLogin={isLogin} user={user} />
+      </div>
+    ) : (
       <div>
         <Navbar />
         <RouterComponent isLogin={isLogin} user={user} />

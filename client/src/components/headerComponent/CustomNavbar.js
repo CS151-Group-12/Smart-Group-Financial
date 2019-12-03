@@ -1,55 +1,65 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { USER_ID } from '../../constant';
+import { connect } from 'react-redux';
+
+import { bindActionCreators } from 'redux';
+import { attemptLogout } from '../../actions/attemptLogoutAction';
 
 class CustomNavbar extends Component {
+  logout() {
+    localStorage.removeItem(USER_ID);
+    this.props.attemptLogout();
+  }
   render() {
     return (
-      <div className="navbar-fixed">
-        <nav className="z-depth-0">
-          <div className="nav-wrapper white">
-            <Link
-              to="/"
+      <div className='navbar-fixed'>
+        <nav className='z-depth-0'>
+          <div className='nav-wrapper white'>
+            <a
+              href='/'
               style={{
-                fontFamily: "monospace"
+                fontFamily: 'monospace'
               }}
-              className="brand-logo black-text"
+              className='brand-logo black-text'
             >
-              <i className="material-icons">code</i>
+              <i className='material-icons'>code</i>
               Smart Group Financial
-            </Link>
-            <ul className="right">
+            </a>
+            <ul className='right'>
               <li>
-                <Link
-                  to="/"
+                <a
+                  href='/'
                   style={{
-                    fontFamily: "monospace"
+                    fontFamily: 'monospace'
                   }}
-                  className=" right black-text"
+                  className=' right black-text'
                 >
                   Create Group
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  to="/"
+                <a
+                  href='/'
                   style={{
-                    fontFamily: "monospace"
+                    fontFamily: 'monospace'
                   }}
-                  className=" right black-text"
+                  className=' right black-text'
                 >
                   Create Event
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  to="/"
+                <a
+                  href='/'
+                  onClick={() => this.logout()}
                   style={{
-                    fontFamily: "monospace"
+                    fontFamily: 'monospace'
                   }}
-                  className=" right black-text"
+                  className=' right black-text'
                 >
                   Logout
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -58,4 +68,13 @@ class CustomNavbar extends Component {
     );
   }
 }
-export default CustomNavbar;
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      attemptLogout: attemptLogout
+    },
+    dispatch
+  );
+}
+
+export default connect(null, matchDispatchToProps)(CustomNavbar);

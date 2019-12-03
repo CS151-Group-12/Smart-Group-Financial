@@ -18,19 +18,37 @@ eventController.get('/', (req, res) => {
 });
 
 /**
- * Get List of Events by user Email
+ * Get List of Events by user ID
  */
-eventController.get('/:id', (req, res) => {
+eventController.get('/user/:userID', (req, res) => {
   const query = `SELECT eventID, name, startDate, endDate, email FROM Event
       JOIN User_Join_Event USING(eventID)
-      JOIN (SELECT userID, email from User WHERE userID LIKE ${req.params.id}) userTable USING (userID);`;
+      JOIN (SELECT userID, email from User WHERE userID LIKE ${req.params.userID}) userTable USING (userID);`;
 
   db.query(query, (err, data) => {
     if (err) {
       console.log('Error while performing Query.' + err);
     } else {
       const returnData = { ...data };
-      res.status(200).json(returnData);
+
+      res.status(200).json(data);
+    }
+  });
+});
+
+eventController.get('/:eventID', (req, res) => {
+  const query = `SELECT email, category, amount
+  FROM User_Contribute_Event
+  JOIN User USING(userID)
+  WHERE eventID = ${req.params.eventID};`;
+
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log('Error while performing Query.' + err);
+    } else {
+      const returnData = { ...data };
+      console.log(...data);
+      res.status(200).json(data);
     }
   });
 });
@@ -70,7 +88,7 @@ eventController.post('/', (req, res) => {
  */
 eventController.post('/join', (req, res) => {
   const { userID, name } = req.body;
-  const getEventByNameQuery = `SELECT id FROM Event WHERE name like '${name}'`;
+  const getEventByNameQuery = `SELECT eventID FROM Event WHERE name like '${name}'`;
   db.query(getEventByNameQuery, (getEventErr, foundEvent) => {
     if (getEventErr) return res.status(500).json(getEventErr);
     else if (foundEvent.length == 0)
@@ -92,7 +110,7 @@ eventController.post('/join', (req, res) => {
  * Add new category to the event
  */
 
-eventController.post('/:eventID/add-category/', (req, res) => {
+eventController.post('/:eventID/contribute/', (req, res) => {
   const { userID, name, moneyAmount } = req.body;
   const addNewCategory = `INSERT INTO User_Contribute_Event VALUES('${req.params.eventID}', '${userID}', '${name}','${moneyAmount}')`;
 
@@ -103,8 +121,64 @@ eventController.post('/:eventID/add-category/', (req, res) => {
 });
 
 eventController.post('/:eventID/calculate', (req, res) => {
-  const difference = 0;
-  const total = 0;
+  const { total, average } = req.body;
+
+  const getUserTotalAmount = `SELECT userID, SUM(amount) as "total"
+      FROM User_Contribute_Event 
+      GROUP BY userID;`;
+
+  db.query(getUserTotalAmount, (err, data, fields) => {
+    if (err) res.status(500).json({ err: err });
+    else {
+      let receipientList = [];
+      let payeeList = [];
+
+      // Get a list to know who needs to pay
+      for (let i = 0; i < data.length; i++) {
+        let diff = data[i].total - average;
+        data[i].diff = diff;
+        if (diff > 0) {
+          receipientList.push(data[i]);
+        } else if (diff < 0) {
+          payeeList.push(data[i]);
+        }
+      }
+
+      for (let i = 0; i < receipientList.length; i++) {
+        for (let j = 0; j < payeeList.length; j++) {
+          const receipientDiff = receipientList[i].diff;
+          const payeeDiff = payeeList[i].diff;
+          let moneyLeft = receipientDiff + payeeDiff;
+          if (payeeDiff !== 'DONE') {
+            if (moneyLeft >= 0) {
+              const userOwesUser = `INSERT INTO User_Owes_User Values(
+                '${receipientList[i].userID}', 
+                '${payeeList[j].userID}', 
+                '${req.params.eventID}',
+                '${Math.abs(payeeDiff)}'
+                )`;
+              payeeList[j].diff = 'DONE';
+              db.query(userOwesUser, (err1, data) => {
+                if (err1) res.status(500).json({ userOwesUserErr: err1 });
+                else console.log('message: ' + data);
+              });
+            } else {
+              continue;
+            }
+          } else {
+            continue;
+          }
+          receipientList[i].diff = moneyLeft;
+        }
+      }
+
+      const getAllUserOwesUserQuery = `SELECT * FROM User_Owes_User;`;
+      db.query(getAllUserOwesUserQuery, (err2, userOwesUserList) => {
+        if (err2) res.status(500).json({ userOwesUserErr2: err2 });
+        else res.status(200).json({ data: userOwesUserList });
+      });
+    }
+  });
 });
 
 export default eventController;
