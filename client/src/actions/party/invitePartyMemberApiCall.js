@@ -7,7 +7,7 @@ import {
 
 import { HOST, PARTY_URI } from '../../constant';
 
-// Register
+// Invite user to party
 export const attemptInvitePartyMember = userData => dispatch => {
   return axios
     .post(`${HOST}${PARTY_URI+'/invite'}`, userData)

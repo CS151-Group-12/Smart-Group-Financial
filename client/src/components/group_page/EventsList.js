@@ -1,10 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import AddEventModal from "./addEventModal";
+
 const EventsList = props => {
     return (
         <div>
-            <h3>Events</h3>
+            <div class='row valign-wrapper'>
+                <div class="col s5">
+                    <h3> Events </h3>
+                </div>
+                <AddEventModal 
+                    partyID={props.partyID}
+                    create={props.create}
+                />
+            </div>
             <hr></hr>
             <div class="row">
                 {props.events.map(event => 
@@ -21,8 +31,7 @@ const EventsList = props => {
                                 </div>
                                 <div class="card-action">
                                     <Link to={{
-                                        pathname:'/event',
-                                        state: {eventID: event.eventID}
+                                        pathname:'/event/'+event.eventID
                                     }}>View</Link>
                                 </div>
                             </div>

@@ -84,6 +84,47 @@ eventController.post('/', (req, res) => {
 
 /**
  * POST/
+ * Party creates an event:
+ * 1. Add a new event to DB
+ * 2. Connect partyID & eventID to Party_Has_Event
+ */
+eventController.post('/create', (req, res) => {
+  const { name, startDate, endDate, partyID } = req.body;
+
+  // Create An Event Query
+  const createEventQuery = `INSERT INTO Event(name, startDate, endDate) VALUES ('${name}', '${startDate}','${endDate}')`;
+
+  db.query(createEventQuery, (createEventErr, createdEvent, eventFields) => {
+    if (createEventErr) return res.status(500).json(createEventErr);
+    else if (createdEvent.length == 0)
+      return res.status(500).json({ data: 'Create Event fail' });
+
+    // Add Party and Event into Party_Has_Event
+    const partyCreateEvent = `INSERT INTO Party_Has_Event VALUES(${createdEvent.insertId}, '${partyID}')`;
+
+    db.query(partyCreateEvent, (partyCreateEventErr, data, partyFields) => {
+      if (partyCreateEventErr) return res.status(500).json(partyCreateEventErr);
+      else if (data.length == 0)
+        return res.status(500).json({ data: 'Party_Has_Event failed' });
+
+      const getPartyEventsQuery = `SELECT eventID, name, startDate, endDate FROM Event 
+                                    JOIN (SELECT eventID FROM Party_Has_Event WHERE Party_Has_Event.partyID=${partyID})a
+                                    USING(eventID)`;
+
+      db.query(getPartyEventsQuery, (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          const returnData = [...data];
+          res.status(200).json(returnData);
+        }
+      });
+    });
+  });
+});
+
+/**
+ * POST/
  * User Join an Event By Name
  */
 eventController.post('/join', (req, res) => {

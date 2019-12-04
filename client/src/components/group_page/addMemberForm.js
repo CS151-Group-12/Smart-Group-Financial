@@ -11,18 +11,10 @@ class AddMemberForm extends Component {
     };
 
     this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-  }
-
-  onSubmit(e) {
-    console.log(this.state);
-    e.preventDefault();
-    this.state.invite(this.state)
-        .then(res => console.log('then', res));
   }
 
   render() {
@@ -44,7 +36,7 @@ class AddMemberForm extends Component {
                 />
               </div>
               <button
-                onClick={this.onSubmit}
+                onClick={() => this.state.invite(this.state)}
                 className="btn btn-lg btn-primary btn-block"
               >
                 Invite

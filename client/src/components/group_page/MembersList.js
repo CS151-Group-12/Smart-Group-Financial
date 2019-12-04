@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import AddMemberModal from './addMemberModal';
 
 const MembersList = props => {
@@ -16,7 +16,14 @@ const MembersList = props => {
             <hr></hr>
             <ul class="collection with-header">
                 {props.members.map(member =>  
-                    <li class="collection-item"><div>{member.email}</div></li>
+                    <li class="collection-item">
+                        <div>
+                            {member.email}
+                            <button class="secondary-content valign-wrapper" onClick={() => props.delete(member.userID)}>
+                                <i class="material-icons">remove</i>
+                            </button>
+                        </div>
+                    </li>
                 )}
             </ul>
         </div>
