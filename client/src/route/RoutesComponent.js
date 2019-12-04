@@ -26,17 +26,9 @@ class RoutesComponent extends Component {
   render() {
     return (
       <div>
-        <Route exact path='/' component={LandingPage} />
-        <Route
-          exact
-          path='/register'
-          component={this.convertToPrivateComponent(RegisterPage)}
-        />
-        <Route
-          exact
-          path='/login'
-          component={this.convertToPrivateComponent(LoginPage)}
-        />
+        <Route exact path="/" component={LandingPage} />
+        <Route exact path="/register" component={RegisterPage} />
+        <Route exact path="/login" component={LoginPage} />
         <Route
           exact
           path='/home'

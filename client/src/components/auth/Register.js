@@ -9,9 +9,6 @@ const Register = props => {
             <h4>
               <b>Register</b>
             </h4>
-            <p className="grey-text text-darken-1">
-              <a href="/login">Already have an account? Login</a>
-            </p>
           </div>
           <form noValidate onSubmit={props.onClick}>
             <div className="input-field col s12">

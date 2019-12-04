@@ -38,10 +38,35 @@ partyController.post('/members', (req, res) => {
   });
 });
 
+/**
+ * POST/
+ * Get ALL groups in the DB
+ */
+partyController.post('/members', (req, res) => {
+  const { partyID } = req.body;
+
+  const getPartyMembersQuery = `SELECT email FROM User 
+                                JOIN (SELECT userID FROM User_Join_Party WHERE User_Join_Party.partyID=${partyID})a
+                                USING(userID)`;
+
+  db.query(getPartyMembersQuery, (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const returnData = [...data];
+      res.status(200).json(returnData);
+    }
+  });
+});
+
+/**
+ * POST/
+ * Get ALL party events in the DB
+ */
 partyController.post('/events', (req, res) => {
   const { partyID } = req.body;
 
-  const getPartyMembersQuery = `SELECT name, startDate, endDate FROM Event 
+  const getPartyMembersQuery = `SELECT eventID, name, startDate, endDate FROM Event 
                                 JOIN (SELECT eventID FROM Party_Has_Event WHERE Party_Has_Event.partyID=${partyID})a
                                 USING(eventID)`;
 
