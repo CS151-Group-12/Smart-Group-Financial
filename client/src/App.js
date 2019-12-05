@@ -35,7 +35,7 @@ class App extends Component {
 
     return isLogin ? (
       <div>
-        <CustomNavbar onClick={this.logout} />
+        <CustomNavbar onClick={this.logout} user={user}/>
         <RouterComponent isLogin={isLogin} user={user} />
       </div>
     ) : (

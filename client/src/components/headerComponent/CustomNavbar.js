@@ -28,7 +28,7 @@ class CustomNavbar extends Component {
             <ul className='right'>
               <li>
                 <a
-                  href='/'
+                  href={'/createparty/'+this.props.user.userID}
                   style={{
                     fontFamily: 'monospace'
                   }}
