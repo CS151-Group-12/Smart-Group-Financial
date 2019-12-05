@@ -23,8 +23,12 @@ import {
   ATTEMPT_EDIT_EVENT_FAILED,
   ATTEMPT_EDIT_EVENT_SUCCESSFULLY,
   ATTEMPT_GET_RESULT_FAILED,
-  ATTEMPT_GET_RESULT_SUCCESSFULLY
-} from '../constant';
+  ATTEMPT_GET_RESULT_SUCCESSFULLY,
+  ATTEMPT_GET_EVENT_SUCCESSFULLY,
+  ATTEMPT_GET_EVENT_FAILED,
+  ATTEMPT_GET_PARTY_SUCCESSFULLY,
+  ATTEMPT_GET_PARTY_FAILED
+} from "../constant";
 
 export default function(state = { loading: false, errors: null }, action) {
   switch (action.type) {
@@ -35,8 +39,16 @@ export default function(state = { loading: false, errors: null }, action) {
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case GET_USER_IDENTITY_SUCCESSFULLY:
       return { ...state, ...action.payload, ...{ isLoading: false } };
-    case ATTEMPT_LOGIN_SUCCESSFULLY:
-      return { ...state, ...action.payload, ...{ loading: false } };
+    case ATTEMPT_LOGIN_SUCCESSFULLY: {
+      return {
+        ...state,
+        ...action.payload,
+        eventList: action.payload.eventList,
+        partyList: action.payload.partyList,
+        ...{ loading: false }
+      };
+    }
+
     case ATTEMPT_LOGIN_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case ATTEMPT_CALCULATE_SUCCESSFULLY:
@@ -68,8 +80,18 @@ export default function(state = { loading: false, errors: null }, action) {
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
 
     case ATTEMPT_GET_RESULT_SUCCESSFULLY:
-      return { ...state, resultList: action.payload, ...{ loading: false } };
+      return { ...state, eventList: action.payload, ...{ loading: false } };
     case ATTEMPT_GET_RESULT_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+
+    case ATTEMPT_GET_EVENT_SUCCESSFULLY:
+      return { ...state, eventList: action.payload, ...{ loading: false } };
+    case ATTEMPT_GET_EVENT_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+
+    case ATTEMPT_GET_PARTY_SUCCESSFULLY:
+      return { ...state, partyList: action.payload, ...{ loading: false } };
+    case ATTEMPT_GET_PARTY_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case ATTEMPT_LOGOUT:
       return {};
