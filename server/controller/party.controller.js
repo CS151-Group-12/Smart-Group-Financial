@@ -4,7 +4,7 @@ const partyController = express.Router();
 
 /**
  * GET/
- * Get ALL groups in the DB
+ * Get ALL partys in the DB
  */
 partyController.get('/', (req, res) => {
   db.query('SELECT * from Party', (err, data) => {
@@ -19,7 +19,7 @@ partyController.get('/', (req, res) => {
 
 /**
  * POST/
- * Get ALL groups in the DB
+ * Get ALL partys in the DB
  */
 partyController.post('/members', (req, res) => {
   const { partyID } = req.body;
@@ -79,9 +79,9 @@ partyController.get('/:id', (req, res) => {
 
 /**
  * POST/
- * User creates an group:
+ * User creates an party:
  * 1. Add a new party to DB
- * 2. Connect userID & partyID to Owner_Create_Party
+ * 2. Connect userID & partyID to User_Create_Party
  */
 partyController.post('/', (req, res) => {
   const { name, userID } = req.body;
@@ -94,10 +94,10 @@ partyController.post('/', (req, res) => {
     if (createParty.length == 0)
       return res.status(404).json({ message: 'Create Party Failed' });
 
-    const ownerFormParty = `INSERT INTO Owner_Form_Party values('${userID}', ${createParty.insertId})`;
+    const userFormParty = `INSERT INTO User_Form_Party values('${userID}', ${createParty.insertId})`;
 
-    db.query(ownerFormParty, (ownerFormPartyErr, data) => {
-      if (ownerFormPartyErr) return res.status(500).json(ownerFormPartyErr);
+    db.query(userFormParty, (userFormPartyErr, data) => {
+      if (userFormPartyErr) return res.status(500).json(userFormPartyErr);
       return res.status(200).json({ data });
     });
   });
@@ -138,7 +138,9 @@ partyController.post('/invite', (req, res) => {
   db.query(getUserByEmailQuery, (err, foundUser) => {
     if (err) return res.status(500).json(err);
     else if (foundUser.length == 0)
-      return res.status(404).json({ message: `User Email: ${email} not Found` });
+      return res
+        .status(404)
+        .json({ message: `User Email: ${email} not Found` });
 
     const joinPartyQuery = `INSERT INTO User_Join_Party values('${foundUser[0].userID}', '${partyID}')`;
 
@@ -158,12 +160,13 @@ partyController.post('/removeUser', (req, res) => {
 
   const removeUserFromPartyQuery = `DELETE FROM User_Join_Party WHERE userID = '${userID}' AND partyID = '${partyID}'`;
 
-
   db.query(removeUserFromPartyQuery, (err, removedUser) => {
     if (err) return res.status(500).json(err);
-    else if(removedUser.affectedRows==0)
-      return res.status(404).json({ message: `User Email: ${userID} not Found` });
-    
+    else if (removedUser.affectedRows == 0)
+      return res
+        .status(404)
+        .json({ message: `User Email: ${userID} not Found` });
+
     const getPartyMembersQuery = `SELECT email FROM User 
     JOIN (SELECT userID FROM User_Join_Party WHERE User_Join_Party.partyID=${partyID})a
     USING(userID)`;

@@ -6,11 +6,11 @@ import { Route } from 'react-router-dom';
 import LandingPage from '../page/LandingPage';
 import RegisterPage from '../page/RegisterPage';
 import LoginPage from '../page/LoginPage';
-import GroupPage from '../page/GroupPage';
+import PartyPage from '../page/PartyPage';
 import HomePage from '../page/HomePage';
 import EventPage from '../page/EventPage';
-import CreateNewCategory from '../components/CreateNewCategory';
-import CreateGroupPage from '../page/CreateGroupPage';
+import ResultsPage from '../page/ResultsPage';
+import CreatePartyPage from '../page/CreatePartyPage';
 import CreateEventPage from '../page/CreateEventPage';
 
 class RoutesComponent extends Component {
@@ -26,9 +26,9 @@ class RoutesComponent extends Component {
   render() {
     return (
       <div>
-        <Route exact path="/" component={LandingPage} />
-        <Route exact path="/register" component={RegisterPage} />
-        <Route exact path="/login" component={LoginPage} />
+        <Route exact path='/' component={LandingPage} />
+        <Route exact path='/register' component={RegisterPage} />
+        <Route exact path='/login' component={LoginPage} />
         <Route
           exact
           path='/home'
@@ -39,16 +39,12 @@ class RoutesComponent extends Component {
           component={this.convertToPrivateComponent(EventPage)}
         />
         <Route
-          exact
-          path='/new-category-form'
-          component={this.convertToPrivateComponent(CreateNewCategory)}
-        />
-        <Route
           path='/party/:partyID'
-          component={this.convertToPrivateComponent(GroupPage)}
+          component={this.convertToPrivateComponent(PartyPage)}
         />
-        <Route exact path='/creategroup' component={CreateGroupPage} />
+        <Route exact path='/createparty' component={CreatePartyPage} />
         <Route exact path='/createevent' component={CreateEventPage} />
+        <Route exact path='/results/:eventID' component={ResultsPage} />
       </div>
     );
   }

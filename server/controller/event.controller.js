@@ -2,6 +2,21 @@ import express from 'express';
 
 const eventController = express.Router();
 
+function getEventDetail(res, eventID) {
+  const query = `SELECT email, category, amount
+  FROM User_Contribute_Event
+  JOIN User USING(userID)
+  WHERE eventID = ${eventID};`;
+
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log('Error while performing Query.' + err);
+    } else {
+      const returnData = [...data];
+      res.status(200).json(returnData);
+    }
+  });
+}
 /**
  * GET/
  * Get ALL events in the DB
@@ -11,7 +26,7 @@ eventController.get('/', (req, res) => {
     if (err) {
       console.log('Error while performing Query.' + err);
     } else {
-      const returnData = { ...data };
+      const returnData = [...data];
       res.status(200).json(returnData);
     }
   });
@@ -29,35 +44,25 @@ eventController.get('/user/:userID', (req, res) => {
     if (err) {
       console.log('Error while performing Query.' + err);
     } else {
-      const returnData = { ...data };
-
-      res.status(200).json(data);
+      const returnData = [...data];
+      res.status(200).json(returnData);
     }
   });
 });
 
+/**
+ * GET/
+ * get All Contributions of the event
+ */
 eventController.get('/:eventID', (req, res) => {
-  const query = `SELECT email, category, amount
-  FROM User_Contribute_Event
-  JOIN User USING(userID)
-  WHERE eventID = ${req.params.eventID};`;
-
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log('Error while performing Query.' + err);
-    } else {
-      const returnData = { ...data };
-      console.log(...data);
-      res.status(200).json(data);
-    }
-  });
+  getEventDetail(res, req.params.eventID);
 });
 
 /**
  * POST/
  * User creates an event:
  * 1. Add a new event to DB
- * 2. Connect userID & eventID to Owner_Create_Event
+ * 2. Connect userID & eventID to User_Create_Event
  */
 eventController.post('/', (req, res) => {
   const { name, startDate, endDate, userID } = req.body;
@@ -70,13 +75,13 @@ eventController.post('/', (req, res) => {
     else if (createdEvent.length == 0)
       return res.status(500).json({ data: 'Create Event fail' });
 
-    // Add User and Event into Owner_Create_Event
-    const ownerCreateEvent = `INSERT INTO User_Create_Event VALUES('${userID}', ${createdEvent.insertId})`;
+    // Add User and Event into User_Create_Event
+    const userCreateEvent = `INSERT INTO User_Create_Event VALUES('${userID}', ${createdEvent.insertId})`;
 
-    db.query(ownerCreateEvent, (ownerCreateEventErr, data, ownerFields) => {
-      if (ownerCreateEventErr) return res.status(500).json(ownerCreateEventErr);
+    db.query(userCreateEvent, (userCreateEventErr, data, userFields) => {
+      if (userCreateEventErr) return res.status(500).json(userCreateEventErr);
       else if (data.length == 0)
-        return res.status(500).json({ data: 'Owner_Create_Event failed' });
+        return res.status(500).json({ data: 'User_Create_Event failed' });
       return res.status(200).json({ data });
     });
   });
@@ -152,27 +157,44 @@ eventController.post('/join', (req, res) => {
  */
 
 eventController.post('/:eventID/contribute/', (req, res) => {
-  const { userID, name, moneyAmount } = req.body;
-  const addNewCategory = `INSERT INTO User_Contribute_Event VALUES('${req.params.eventID}', '${userID}', '${name}','${moneyAmount}')`;
+  const { userID, category, moneyAmount } = req.body;
+  const addNewCategory = `INSERT INTO User_Contribute_Event VALUES('${req.params.eventID}', '${userID}', '${category}','${moneyAmount}')`;
 
-  db.query(addNewCategory, (addNewCategoryErr, data) => {
-    if (addNewCategoryErr) res.status(500).json(addNewCategoryErr);
-    else res.status(200).json({ data });
+  const checkCategoryExisted = `SELECT * FROM User_Contribute_Event WHERE category = '${category}' AND userID = '${userID}'`;
+
+  db.query(checkCategoryExisted, (err, foundCategory) => {
+    if (err) res.status(500).json({ err: err });
+    else if (foundCategory.length > 0) {
+      res.status(400).json({
+        message: "You can't create the same category. Please update."
+      });
+    } else {
+      db.query(addNewCategory, (addNewCategoryErr, data) => {
+        if (addNewCategoryErr) res.status(500).json(addNewCategoryErr);
+        else {
+          getEventDetail(res, req.params.eventID);
+        }
+      });
+    }
   });
 });
 
 eventController.post('/:eventID/calculate', (req, res) => {
-  const { total, average } = req.body;
-
   const getUserTotalAmount = `SELECT userID, SUM(amount) as "total"
       FROM User_Contribute_Event 
-      GROUP BY userID;`;
+      PARTY BY userID;`;
 
   db.query(getUserTotalAmount, (err, data, fields) => {
     if (err) res.status(500).json({ err: err });
     else {
       let receipientList = [];
       let payeeList = [];
+      let average = 0;
+      let sum = 0;
+      for (let i = 0; i < data.length; i++) {
+        sum += data[i].total;
+      }
+      average = sum / data.length;
 
       // Get a list to know who needs to pay
       for (let i = 0; i < data.length; i++) {
@@ -192,16 +214,31 @@ eventController.post('/:eventID/calculate', (req, res) => {
           let moneyLeft = receipientDiff + payeeDiff;
           if (payeeDiff !== 'DONE') {
             if (moneyLeft >= 0) {
-              const userOwesUser = `INSERT INTO User_Owes_User Values(
-                '${receipientList[i].userID}', 
-                '${payeeList[j].userID}', 
-                '${req.params.eventID}',
-                '${Math.abs(payeeDiff)}'
-                )`;
-              payeeList[j].diff = 'DONE';
-              db.query(userOwesUser, (err1, data) => {
-                if (err1) res.status(500).json({ userOwesUserErr: err1 });
-                else console.log('message: ' + data);
+              const deleteAllUserByEventID = `DELETE FROM User_Owes_User WHERE eventID = '${req.params.eventID}'`;
+              db.query(deleteAllUserByEventID, (err, data) => {
+                if (err) res.status(500).json(err);
+                else {
+                  const userOwesUser = `REPLACE INTO User_Owes_User Values(
+                    '${receipientList[i].userID}',
+                    '${payeeList[j].userID}', 
+                    '${req.params.eventID}',
+                    '${Math.abs(payeeDiff)}'
+                    )`;
+                  //    SELECT * FROM (SELECT '${receipientList[i].userID}', '${
+                  //   payeeList[j].userID
+                  // }', '${req.params.eventID}','${Math.abs(payeeDiff)}') AS tmp
+                  //   WHERE NOT EXISTS (SELECT * FROM User_Owes_User WHERE receipientID = '${
+                  //     receipientList[i].userID
+                  //   }' AND payerID = '${payeeList[j].userID}' AND eventID = '${
+                  //   req.params.eventID
+                  // }' AND amount = '${Math.abs(payeeDiff)}')`;
+                  payeeList[j].diff = 'DONE';
+                  db.query(userOwesUser, (err1, data) => {
+                    i;
+                    if (err1) res.status(500).json({ userOwesUserErr: err1 });
+                    else res.status(200).json({ message: true });
+                  });
+                }
               });
             } else {
               continue;
@@ -212,12 +249,40 @@ eventController.post('/:eventID/calculate', (req, res) => {
           receipientList[i].diff = moneyLeft;
         }
       }
+    }
+  });
+});
 
-      const getAllUserOwesUserQuery = `SELECT * FROM User_Owes_User;`;
-      db.query(getAllUserOwesUserQuery, (err2, userOwesUserList) => {
-        if (err2) res.status(500).json({ userOwesUserErr2: err2 });
-        else res.status(200).json({ data: userOwesUserList });
-      });
+eventController.get('/:eventID/result', (req, res) => {
+  const getAllUserOwesUserQuery = `SELECT payer.email as "payee", amount, recipient.email as "recipient", eventID
+      FROM User_Owes_User uou
+        JOIN User payer
+        JOIN User recipient
+        WHERE 
+        uou.receipientID = recipient.userID AND 
+            uou.payerID = payer.userID AND
+            eventID = ${req.params.eventID};`;
+  db.query(getAllUserOwesUserQuery, (err2, userOwesUserList) => {
+    if (err2) res.status(500).json({ userOwesUserErr2: err2 });
+    else {
+      const returnData = [...userOwesUserList];
+      res.status(200).json(returnData);
+    }
+  });
+});
+
+/**
+ * PUT/
+ * Update the money Amount of User_Contribute_Event
+ */
+eventController.put('/:eventID/contribute/', (req, res) => {
+  const { categoryName, moneyAmount, userID } = req.body;
+  const updateQuery = `UPDATE User_Contribute_Event SET amount = ${moneyAmount} WHERE category = '${categoryName}' AND eventID = ${req.params.eventID} AND userID = ${userID};`;
+  db.query(updateQuery, (err, data) => {
+    if (err) res.status(500).json({ err: err });
+    else {
+      console.log(data);
+      getEventDetail(res, req.params.eventID);
     }
   });
 });

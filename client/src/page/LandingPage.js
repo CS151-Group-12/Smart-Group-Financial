@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import Landing from '../components/Landing';
-import { Redirect, withRouter } from 'react-router-dom';
+import Landing from '../components/headerComponent/Landing';
+import { Redirect } from 'react-router-dom';
 import { USER_ID } from '../constant';
-import { setUserToken } from '../actions/setUserTokenAction';
+import { setUserToken } from '../actions/auth/setUserTokenAction';
 import { connect } from 'react-redux';
 
 import { bindActionCreators } from 'redux';
 
 class LandingPage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const userID = localStorage.getItem(USER_ID);
-    console.log('Landing Paage' + userID);
     if (userID) {
       this.props.setUserToken({
         userID

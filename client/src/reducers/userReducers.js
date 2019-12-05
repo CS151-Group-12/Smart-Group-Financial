@@ -19,17 +19,18 @@ import {
   ATTEMPT_CONTRIBUTE_SUCCESSFULLY,
   ATTEMPT_GET_EVENT_DETAIL_SUCCESSFULLY,
   ATTEMPT_GET_EVENT_DETAIL_FAILED,
-  ATTEMPT_LOGOUT
+  ATTEMPT_LOGOUT,
+  ATTEMPT_EDIT_EVENT_FAILED,
+  ATTEMPT_EDIT_EVENT_SUCCESSFULLY,
+  ATTEMPT_GET_RESULT_FAILED,
+  ATTEMPT_GET_RESULT_SUCCESSFULLY
 } from '../constant';
 
 export default function(state = { loading: false, errors: null }, action) {
   switch (action.type) {
     // Register
-    case ATTEMPT_REGISTER_SUCCESSFULLY: {
-      console.log(action.payload + "," + action.type);
+    case ATTEMPT_REGISTER_SUCCESSFULLY:
       return { ...state, ...action.payload, ...{ loading: false } };
-    }
-
     case ATTEMPT_REGISTER_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case GET_USER_IDENTITY_SUCCESSFULLY:
@@ -43,8 +44,13 @@ export default function(state = { loading: false, errors: null }, action) {
     case ATTEMPT_CALCULATE_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case ATTEMPT_CONTRIBUTE_SUCCESSFULLY:
-      return { ...state, ...action.payload, ...{ loading: false } };
+      return { ...state, list: action.payload, ...{ loading: false } };
     case ATTEMPT_CONTRIBUTE_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+
+    case ATTEMPT_EDIT_EVENT_SUCCESSFULLY:
+      return { ...state, list: action.payload, ...{ loading: false } };
+    case ATTEMPT_EDIT_EVENT_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case GET_USER_IDENTITY_FAILED:
       return {};
@@ -60,12 +66,15 @@ export default function(state = { loading: false, errors: null }, action) {
       return { ...state, ...action.payload, ...{ loading: false } };
     case ATTEMPT_GET_PARTY_EVENTS_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+
+    case ATTEMPT_GET_RESULT_SUCCESSFULLY:
+      return { ...state, resultList: action.payload, ...{ loading: false } };
+    case ATTEMPT_GET_RESULT_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case ATTEMPT_LOGOUT:
       return {};
 
     case ATTEMPT_GET_EVENT_DETAIL_SUCCESSFULLY: {
-      console.log('redux');
-      console.log({ ...action.payload }[0]);
       return {
         ...state,
         list: action.payload,

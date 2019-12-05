@@ -3,21 +3,27 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect, withRouter } from 'react-router-dom';
 
-import { attemptContribute } from '../actions/attemptContribute/contributeApiCall';
-import { attemptCalculate } from '../actions/attemptCalculate/calculateApiCall';
-import { attemptGetEventDetail } from '../actions/attemptgetEventDetail/getEventDetailApiCall';
+import { attemptContribute } from '../apiCall/event/contributeApiCall';
+import { attemptCalculate } from '../apiCall/event/calculateApiCall';
+import { attemptGetEventDetail } from '../apiCall/event/getEventDetailApiCall';
+import { attemptEditEvent } from '../apiCall/event/editEventApiCall';
 
-import Event from '../components/Event';
+import Event from '../components/event/Event';
 
 import { getTokenFromLocalStorage } from '../utils';
 
 class EventPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    const { eventID } = this.props.match.params;
     this.state = {
-      categories: {},
+      eventID: eventID,
+      categories: [],
+      calculateSuccess: false,
       errors: {}
     };
+
+    this.onClick = this.onClickCalculate.bind(this);
   }
 
   onChange = e => {
@@ -25,23 +31,34 @@ class EventPage extends Component {
   };
 
   async componentDidMount() {
-    const { eventID } = this.props.match.params;
-    this.props.attemptGetEventDetail(eventID);
+    this.props.attemptGetEventDetail(this.state.eventID).then(res => {
+      this.setState({ calculateSuccess: false });
+    });
   }
+
+  onClickContribute = e => {
+    e.preventDefault();
+    this.props.attemptContribute();
+  };
 
   onClickCalculate = e => {
     e.preventDefault();
-    console.log('calculate');
-
-    this.props.attemptCalculate({
-      average: this.state.average,
-      userID: getTokenFromLocalStorage('userID')
-    });
+    this.props
+      .attemptCalculate({
+        average: this.state.average,
+        eventID: this.state.eventID,
+        userID: getTokenFromLocalStorage('userID')
+      })
+      .then(res => {
+        if (res.data.message === true) {
+          this.setState({ calculateSuccess: true });
+        }
+      });
   };
 
   render() {
     const user = this.props.user || {};
-    const categoryList = [];
+    const categories = [];
     const list = user.list || {};
     const categoryArray = Object.keys(list).map(i => list[i]);
     let i = 1;
@@ -52,19 +69,24 @@ class EventPage extends Component {
         categoryItem.category,
         categoryItem.amount
       ];
-      categoryList.push(newCategory);
+      categories.push(newCategory);
       i += 1;
     });
 
     const columns = ['ID', 'Name', 'Category', 'Amount Money'];
     const options = { filterType: 'checkbox' };
 
-    return (
+    return this.state.calculateSuccess ? (
+      <Redirect to={`/results/${this.state.eventID}`} />
+    ) : (
       <Event
-        data={categoryList}
+        data={categories}
         columns={columns}
         options={options}
-        onClickCalculate={e => this.onClickCalculate(e)}
+        eventID={this.state.eventID}
+        contribute={this.props.attemptContribute}
+        calculate={e => this.onClickCalculate(e)}
+        edit={this.props.attemptEditEvent}
       />
     );
   }
@@ -79,7 +101,12 @@ function mapStateToProps(state) {
 
 function matchDispatchToProps(dispatch) {
   return bindActionCreators(
-    { attemptCalculate, attemptContribute, attemptGetEventDetail },
+    {
+      attemptCalculate,
+      attemptContribute,
+      attemptGetEventDetail,
+      attemptEditEvent
+    },
     dispatch
   );
 }

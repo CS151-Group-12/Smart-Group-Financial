@@ -3,8 +3,8 @@ import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { attemptGetPartiesByUserId } from '../actions/homePage/getPartiesByUserIdApiCall';
-import { attemptGetEventsByUserId } from '../actions/homePage/getEventsByUserIdApiCall';
+import { attemptGetPartiesByUserId } from '../apiCall/party/getPartiesByUserIdApiCall';
+import { attemptGetEventsByUserId } from '../apiCall/event/getEventsByUserIdApiCall';
 
 class HomePage extends Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class HomePage extends Component {
     this.setState({ ...this.state, ...{ selectedRow } });
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.props
       .attemptGetEventsByUserId()
       .then(res => {
@@ -62,11 +62,11 @@ class HomePage extends Component {
                 class='col s6 collection with-header'
               >
                 <li class='collection-header'>
-                  <h4>My Groups</h4>
+                  <h4>My Partys</h4>
                 </li>
                 <li class='collection-item'>
                   <div>
-                    Group 1
+                    Party 1
                     <a href='#!' class='secondary-content'>
                       <i class='material-icons'>send</i>
                     </a>
@@ -74,7 +74,7 @@ class HomePage extends Component {
                 </li>
                 <li class='collection-item'>
                   <div>
-                    Group 2
+                    Party 2
                     <a href='#!' class='secondary-content'>
                       <i class='material-icons'>send</i>
                     </a>
@@ -82,7 +82,7 @@ class HomePage extends Component {
                 </li>
                 <li class='collection-item'>
                   <div>
-                    Group 3
+                    Party 3
                     <a href='#!' class='secondary-content'>
                       <i class='material-icons'>send</i>
                     </a>

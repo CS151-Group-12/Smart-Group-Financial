@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect, withRouter } from 'react-router-dom';
 
-import { attemptLogin } from '../actions/login/loginApiCall';
+import { attemptLogin } from '../apiCall/auth/loginApiCall';
 
 import Login from '../components/auth/Login.js';
 
@@ -38,9 +38,8 @@ class LoginPage extends Component {
     const password = { ...this.state.password };
     const user = this.props.user || {};
     const { userID } = user;
-    console.log('User is: ' + user);
 
-    return user.email && userID ? (
+    return userID ? (
       <Redirect to='/home' />
     ) : (
       <Login

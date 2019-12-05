@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { USER_ID } from '../../constant';
 import { connect } from 'react-redux';
 
 import { bindActionCreators } from 'redux';
-import { attemptLogout } from '../../actions/attemptLogoutAction';
+import { attemptLogout } from '../../actions/auth/attemptLogoutAction';
 
 class CustomNavbar extends Component {
   logout() {
@@ -24,7 +23,7 @@ class CustomNavbar extends Component {
               className='brand-logo black-text'
             >
               <i className='material-icons'>code</i>
-              Smart Group Financial
+              Smart Party Financial
             </a>
             <ul className='right'>
               <li>
@@ -35,12 +34,12 @@ class CustomNavbar extends Component {
                   }}
                   className=' right black-text'
                 >
-                  Create Group
+                  Create Party
                 </a>
               </li>
               <li>
                 <a
-                  href='/'
+                  href='/createevent'
                   style={{
                     fontFamily: 'monospace'
                   }}

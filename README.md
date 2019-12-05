@@ -32,18 +32,9 @@ npm run dev
 
 Open 'http://localhost:8080/'
 
-Testing other routes: 'http://localhost:8080/users'
-
 ## Server Composition:
 
 All the logic of fetching/retrieving data and setup Database
-
-```
-server
-├── Controller  - Storing all APIs of the app including POST, PUT, DELETE
-├── model       - Model of each object within database
-└── App.js      - Everything a server needs
-```
 
 ## Front-end Composition (React.js):
 
@@ -51,7 +42,7 @@ server
 
 ## Authors
 
-**Calvin Nguyen** - [NivlaCuong](https://github.com/NivlaCuong)
+**Calvin Nguyen** - [NivlaCuong](https://github.com/calvinqc)
 
 **Christian Castro** - [ChristianCastr0](https://github.com/ChristianCastr0)
 

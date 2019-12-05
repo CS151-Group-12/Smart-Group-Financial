@@ -4,15 +4,13 @@ import { connect } from 'react-redux';
 
 import { bindActionCreators } from 'redux';
 
-import Navbar from './components/Navbar';
+import Navbar from './components/headerComponent/Navbar';
 
 import CustomNavbar from './components/headerComponent/CustomNavbar';
 
 import RouterComponent from './route/RouterCompnent.js';
 
-import { setUserToken } from './actions/setUserTokenAction';
-
-import { getUserIdentity } from './actions/getUserIdentity';
+import { setUserToken } from './actions/auth/setUserTokenAction';
 
 import { USER_ID } from './constant';
 
@@ -22,16 +20,12 @@ class App extends Component {
     this.state = {};
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const userID = localStorage.getItem(USER_ID);
-    console.log('get token');
     if (userID) {
-      console.log(`has token ${userID}`);
       this.props.setUserToken({
         userID
       });
-
-      this.props.getUserIdentity(userID);
     }
   }
 
@@ -61,7 +55,6 @@ function mapStateToProps(state) {
 function matchDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      getUserIdentity: getUserIdentity,
       setUserToken: setUserToken
     },
     dispatch
