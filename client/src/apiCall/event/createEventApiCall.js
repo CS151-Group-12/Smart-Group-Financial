@@ -5,11 +5,7 @@ import {
   attemptCreateEventFailed
 } from '../../actions/event/attemptCreateEvent';
 
-<<<<<<< HEAD:client/src/actions/createEvent/createEventApiCall.js
 import { HOST, EVENT_URI } from "../../constant";
-=======
-import { HOST, EVENT_URI } from '../../constant';
->>>>>>> Delete api (#43):client/src/apiCall/event/createEventApiCall.js
 
 import { setTokenToLocalStorage } from '../../utils';
 

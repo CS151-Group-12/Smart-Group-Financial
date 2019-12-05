@@ -1,16 +1,32 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router-dom';
 
+import { attemptCreateParty } from '../apiCall/party/createPartyApiCall';
 class CreatePartyPage extends Component {
   constructor(props) {
     super(props);
+    const { userID } = this.props.match.params;
+    
     this.state = {
-      partyID: null
+      userID: userID,
+      name: ''
     };
+
+    this.handleParty = this.handleParty.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
-  handleParty = partyID => {
-    this.setState({
-      partyID
-    });
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleParty() {
+    this.props.attemptCreateParty(this.state)
+      .then(res => {
+        console.log(res);
+      });
   };
 
   render() {
@@ -28,12 +44,15 @@ class CreatePartyPage extends Component {
                     placeholder="Party Name"
                     type="text"
                     className="validate"
+                    value={this.state.name}
+                    name='name'
+                    onChange={this.onChange}
                   />
                 </div>
 
                 <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                   <button
-                    onClick={() => this.props.handleParty(this.props.orderID)}
+                    onClick={this.handleParty}
                     style={{
                       width: "120px",
                       borderRadius: "2px",
@@ -55,4 +74,22 @@ class CreatePartyPage extends Component {
   }
 }
 
-export default CreatePartyPage;
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      attemptCreateParty
+    },
+    dispatch
+  );
+}
+
+export default connect(
+  mapStateToProps,
+  matchDispatchToProps
+)(withRouter(CreatePartyPage));

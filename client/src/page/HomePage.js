@@ -59,32 +59,32 @@ class HomePage extends Component {
             <div className='col s6'>
               <ul
                 style={{ width: '75vh' }}
-                class='col s6 collection with-header'
+                className='col s6 collection with-header'
               >
-                <li class='collection-header'>
+                <li className='collection-header'>
                   <h4>My Partys</h4>
                 </li>
-                <li class='collection-item'>
+                <li className='collection-item'>
                   <div>
                     Party 1
-                    <a href='#!' class='secondary-content'>
-                      <i class='material-icons'>send</i>
+                    <a href='#!' className='secondary-content'>
+                      <i className='material-icons'>send</i>
                     </a>
                   </div>
                 </li>
-                <li class='collection-item'>
+                <li className='collection-item'>
                   <div>
                     Party 2
-                    <a href='#!' class='secondary-content'>
-                      <i class='material-icons'>send</i>
+                    <a href='#!' className='secondary-content'>
+                      <i className='material-icons'>send</i>
                     </a>
                   </div>
                 </li>
-                <li class='collection-item'>
+                <li className='collection-item'>
                   <div>
                     Party 3
-                    <a href='#!' class='secondary-content'>
-                      <i class='material-icons'>send</i>
+                    <a href='#!' className='secondary-content'>
+                      <i className='material-icons'>send</i>
                     </a>
                   </div>
                 </li>
@@ -93,32 +93,32 @@ class HomePage extends Component {
             <div className='col s6'>
               <ul
                 style={{ width: '75vh' }}
-                class='col s6 collection with-header'
+                className='col s6 collection with-header'
               >
-                <li class='collection-header'>
+                <li className='collection-header'>
                   <h4>My Events</h4>
                 </li>
-                <li class='collection-item'>
+                <li className='collection-item'>
                   <div>
                     Event 1
-                    <a href='#!' class='secondary-content'>
-                      <i class='material-icons'>send</i>
+                    <a href='#!' className='secondary-content'>
+                      <i className='material-icons'>send</i>
                     </a>
                   </div>
                 </li>
-                <li class='collection-item'>
+                <li className='collection-item'>
                   <div>
                     Event 2
-                    <a href='#!' class='secondary-content'>
-                      <i class='material-icons'>send</i>
+                    <a href='#!' className='secondary-content'>
+                      <i className='material-icons'>send</i>
                     </a>
                   </div>
                 </li>
-                <li class='collection-item'>
+                <li className='collection-item'>
                   <div>
                     Event 3
-                    <a href='#!' class='secondary-content'>
-                      <i class='material-icons'>send</i>
+                    <a href='#!' className='secondary-content'>
+                      <i className='material-icons'>send</i>
                     </a>
                   </div>
                 </li>
