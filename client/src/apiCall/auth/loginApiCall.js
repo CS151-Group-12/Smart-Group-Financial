@@ -16,8 +16,6 @@ export const attemptLogin = userData => dispatch => {
     .then(res => {
       // Set userToken to Local Storage
       setTokenToLocalStorage(USER_ID, res.data.userID);
-      console.log('attempt login callAPI');
-      console.log(res.data);
       const payload = dispatch(attemptLoginSuccessfully(res.data));
       return payload;
     })

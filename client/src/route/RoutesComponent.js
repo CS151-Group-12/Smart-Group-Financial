@@ -42,9 +42,26 @@ class RoutesComponent extends Component {
           path='/party/:partyID'
           component={this.convertToPrivateComponent(PartyPage)}
         />
-        <Route exact path='/createparty/:userID' component={CreatePartyPage} />
-        <Route exact path='/createevent' component={CreateEventPage} />
-        <Route exact path='/results/:eventID' component={ResultsPage} />
+        <Route
+          exact
+          path='/createparty/:userID'
+          component={this.convertToPrivateComponent(CreatePartyPage)}
+        />
+        <Route
+          exact
+          path='/createparty'
+          component={this.convertToPrivateComponent(CreatePartyPage)}
+        />
+        <Route
+          exact
+          path='/create-event'
+          component={this.convertToPrivateComponent(CreateEventPage)}
+        />
+        <Route
+          exact
+          path='/results/:eventID'
+          component={this.convertToPrivateComponent(ResultsPage)}
+        />
       </div>
     );
   }

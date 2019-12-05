@@ -48,7 +48,7 @@ class HomePage extends Component {
 
   render() {
     return this.state.selectedRow ? (
-      <Redirect to={`/event/${this.state.selectedRow.eventID}`} />
+      <Redirect to={`/`} />
     ) : (
       <div
         style={{ height: '75vh', width: '75vh' }}

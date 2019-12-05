@@ -65,10 +65,11 @@ eventController.get('/:eventID', (req, res) => {
  * 2. Connect userID & eventID to User_Create_Event
  */
 eventController.post('/', (req, res) => {
-  const { name, startDate, endDate, userID } = req.body;
+  const { name, startDate, endDate, location, userID } = req.body;
 
+  console.log(req.body);
   // Create An Event Query
-  const createEventQuery = `INSERT INTO Event(name, startDate, endDate) VALUES ('${name}', '${startDate}','${endDate}')`;
+  const createEventQuery = `INSERT INTO Event(name, startDate, endDate, location) VALUES ('${name}', '${startDate}','${endDate}', '${location}')`;
 
   db.query(createEventQuery, (createEventErr, createdEvent, eventFields) => {
     if (createEventErr) return res.status(500).json(createEventErr);
@@ -82,7 +83,14 @@ eventController.post('/', (req, res) => {
       if (userCreateEventErr) return res.status(500).json(userCreateEventErr);
       else if (data.length == 0)
         return res.status(500).json({ data: 'User_Create_Event failed' });
-      return res.status(200).json({ data });
+      else {
+        console.log(createdEvent.insertId);
+        const getEvent = `SELECT * FROM Event WHERE eventID = '${createdEvent.insertId}'`;
+        db.query(getEvent, (getEventErr, event, userFields) => {
+          if (getEventErr) res.status(500).json(getEventErr);
+          else return res.status(200).json({ ...event });
+        });
+      }
     });
   });
 });
@@ -224,14 +232,6 @@ eventController.post('/:eventID/calculate', (req, res) => {
                     '${req.params.eventID}',
                     '${Math.abs(payeeDiff)}'
                     )`;
-                  //    SELECT * FROM (SELECT '${receipientList[i].userID}', '${
-                  //   payeeList[j].userID
-                  // }', '${req.params.eventID}','${Math.abs(payeeDiff)}') AS tmp
-                  //   WHERE NOT EXISTS (SELECT * FROM User_Owes_User WHERE receipientID = '${
-                  //     receipientList[i].userID
-                  //   }' AND payerID = '${payeeList[j].userID}' AND eventID = '${
-                  //   req.params.eventID
-                  // }' AND amount = '${Math.abs(payeeDiff)}')`;
                   payeeList[j].diff = 'DONE';
                   db.query(userOwesUser, (err1, data) => {
                     i;

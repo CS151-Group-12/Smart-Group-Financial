@@ -6,20 +6,24 @@ import { bindActionCreators } from 'redux';
 import { attemptLogout } from '../../actions/auth/attemptLogoutAction';
 
 class CustomNavbar extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   logout() {
     localStorage.removeItem(USER_ID);
     this.props.attemptLogout();
   }
   render() {
+    const user = this.props.user || {};
+    const { email } = user;
     return (
       <div className='navbar-fixed'>
         <nav className='z-depth-0'>
           <div className='nav-wrapper white'>
             <a
               href='/'
-              style={{
-                fontFamily: 'monospace'
-              }}
+              style={{ fontFamily: 'monospace' }}
               className='brand-logo black-text'
             >
               <i className='material-icons'>code</i>
@@ -39,7 +43,7 @@ class CustomNavbar extends Component {
               </li>
               <li>
                 <a
-                  href='/createevent'
+                  href='/create-event'
                   style={{
                     fontFamily: 'monospace'
                   }}
@@ -67,6 +71,14 @@ class CustomNavbar extends Component {
     );
   }
 }
+
+// Store
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
 function matchDispatchToProps(dispatch) {
   return bindActionCreators(
     {
@@ -76,4 +88,4 @@ function matchDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, matchDispatchToProps)(CustomNavbar);
+export default connect(mapStateToProps, matchDispatchToProps)(CustomNavbar);
