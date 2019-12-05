@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Redirect, withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Redirect, withRouter } from "react-router-dom";
 
-import { attemptLogin } from '../apiCall/auth/loginApiCall';
+import { attemptLogin } from "../apiCall/auth/loginApiCall";
 
-import Login from '../components/auth/Login.js';
+import Login from "../components/auth/Login.js";
 
 class LoginPage extends Component {
   constructor() {
     super();
     this.state = {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       errors: {}
     };
     this.onChange = this.onChange.bind(this);
@@ -40,7 +40,7 @@ class LoginPage extends Component {
     const { userID } = user;
 
     return userID ? (
-      <Redirect to='/home' />
+      <Redirect to="/home" />
     ) : (
       <Login
         onChange={e => this.onChange(e)}

@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Redirect, withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Redirect, withRouter } from "react-router-dom";
 
-import { attemptRegister } from '../apiCall/auth/registerApiCall';
+import { attemptRegister } from "../apiCall/auth/registerApiCall";
 
-import Register from '../components/auth/Register.js';
+import Register from "../components/auth/Register.js";
 
 class RegisterPage extends Component {
   constructor() {
     super();
     this.state = {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       errors: {}
     };
     this.onChange = this.onChange.bind(this);
@@ -40,7 +40,7 @@ class RegisterPage extends Component {
     const { userID } = user;
 
     return user.email && userID ? (
-      <Redirect to='/home' />
+      <Redirect to="/home" />
     ) : (
       <Register
         onChange={e => this.onChange(e)}
