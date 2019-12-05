@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 
 const partyController = express.Router();
 
@@ -6,8 +6,8 @@ const partyController = express.Router();
  * GET/
  * Get ALL partys in the DB
  */
-partyController.get('/', (req, res) => {
-  db.query('SELECT * from Party', (err, data) => {
+partyController.get("/", (req, res) => {
+  db.query("SELECT * from Party", (err, data) => {
     if (err) {
       console.log(err);
     } else {
@@ -21,7 +21,7 @@ partyController.get('/', (req, res) => {
  * POST/
  * Get ALL partys in the DB
  */
-partyController.post('/members', (req, res) => {
+partyController.post("/members", (req, res) => {
   const { partyID } = req.body;
 
   const getPartyMembersQuery = `SELECT email, userID FROM User 
@@ -42,7 +42,7 @@ partyController.post('/members', (req, res) => {
  * POST/
  * Get ALL party events in the DB
  */
-partyController.post('/events', (req, res) => {
+partyController.post("/events", (req, res) => {
   const { partyID } = req.body;
 
   const getPartyEventsQuery = `SELECT eventID, name, startDate, endDate FROM Event 
@@ -62,16 +62,16 @@ partyController.post('/events', (req, res) => {
 /**
  * Get List of Parties by user ID
  */
-partyController.get('/:id', (req, res) => {
+partyController.get("/:id", (req, res) => {
   const query = `SELECT partyID, name, email FROM Party
                   JOIN User_Join_Party USING(partyID)
                   JOIN (SELECT userID, email from User WHERE userID LIKE ${req.params.id}) userTable USING(userID);`;
 
   db.query(query, (err, data) => {
     if (err) {
-      console.log('Error while performing Query.' + err);
+      console.log("Error while performing Query." + err);
     } else {
-      const returnData = { ...data };
+      const returnData = [...data];
       res.status(200).json(returnData);
     }
   });
@@ -83,7 +83,7 @@ partyController.get('/:id', (req, res) => {
  * 1. Add a new party to DB
  * 2. Connect userID & partyID to User_Create_Party
  */
-partyController.post('/', (req, res) => {
+partyController.post("/", (req, res) => {
   const { name, userID } = req.body;
 
   // Create a Party Query
@@ -92,7 +92,7 @@ partyController.post('/', (req, res) => {
   db.query(createPartyQuery, (createPartyErr, createParty) => {
     if (createPartyErr) return res.status(500).json(createPartyErr);
     if (createParty.length == 0)
-      return res.status(404).json({ message: 'Create Party Failed' });
+      return res.status(404).json({ message: "Create Party Failed" });
 
     const userFormParty = `INSERT INTO User_Form_Party values('${userID}', ${createParty.insertId})`;
 
@@ -107,7 +107,7 @@ partyController.post('/', (req, res) => {
  * POST/
  * User Join a Party By Name
  */
-partyController.post('/join', (req, res) => {
+partyController.post("/join", (req, res) => {
   const { userID, name } = req.body;
 
   const getPartyByNameQuery = `SELECT id FROM Party WHERE name like '${name}'`;
@@ -130,7 +130,7 @@ partyController.post('/join', (req, res) => {
  * POST/
  * Invite user to party
  */
-partyController.post('/invite', (req, res) => {
+partyController.post("/invite", (req, res) => {
   const { email, partyID } = req.body;
 
   const getUserByEmailQuery = `SELECT userID FROM User WHERE email like '${email}'`;
@@ -155,7 +155,7 @@ partyController.post('/invite', (req, res) => {
  * POST/
  * Delete user from party
  */
-partyController.post('/removeUser', (req, res) => {
+partyController.post("/removeUser", (req, res) => {
   const { userID, partyID } = req.body;
 
   const removeUserFromPartyQuery = `DELETE FROM User_Join_Party WHERE userID = '${userID}' AND partyID = '${partyID}'`;
