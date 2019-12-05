@@ -1,52 +1,80 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Redirect, withRouter } from 'react-router-dom';
+
+import { attemptCreateEvent } from '../apiCall/event/createEventApiCall';
+
+import CreateEvent from '../components/event/CreateEvent';
+import { getTokenFromLocalStorage } from '../utils';
 
 class CreateEventPage extends Component {
-  render() {
-    return (
-      <div className="center-align">
-        <div
-          style={{ height: "75vh", width: "75vh" }}
-          className="container valign-wrapper "
-        >
-          <div style={{ marginTop: "4rem" }} className="row">
-            <div className="col s12 ">
-              <form className="col s12">
-                <div className="input-field col s12">
-                  <input
-                    placeholder="Event Name"
-                    type="text"
-                    className="validate"
-                  />
-                </div>
-                <div className="input-field col s12">
-                  <input
-                    placeholder="Event Location"
-                    type="text"
-                    className="validate"
-                  />
-                </div>
+  constructor() {
+    super();
+    this.state = {
+      name: '',
+      location: '',
+      startdate: '',
+      endDate: '',
+      errors: {}
+    };
+    this.onChange = this.onChange.bind(this);
+    this.onClick = this.onClick.bind(this);
+  }
 
-                <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                  <button
-                    style={{
-                      width: "120px",
-                      borderRadius: "2px",
-                      letterSpacing: "1.5px",
-                      marginTop: "1rem"
-                    }}
-                    type="submit"
-                    className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-                  >
-                    Create Event
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+  onChange = e => {
+    this.setState({ [e.target.id]: e.target.value });
+  };
+
+  onClick = e => {
+    e.preventDefault();
+
+    this.props.attemptCreateEvent({
+      name: this.state.name,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
+      location: this.state.location,
+      userID: getTokenFromLocalStorage('userID')
+    });
+  };
+  render() {
+    const user = this.props.user || {};
+    const name = { ...this.state.name };
+    const location = { ...this.state.location };
+    const startDate = { ...this.state.startDate };
+    const endDate = { ...this.state.endDate };
+    const { createdEvent } = user;
+
+    return createdEvent ? (
+      <Redirect to={`/event/${createdEvent[0].eventID}`} />
+    ) : (
+      <div>
+        <CreateEvent
+          name={name}
+          location={location}
+          startDate={startDate}
+          endDate={endDate}
+          onChange={e => this.onChange(e)}
+          onClick={e => this.onClick(e)}
+        />
       </div>
     );
   }
 }
 
-export default CreateEventPage;
+// Store
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators({ attemptCreateEvent }, dispatch);
+}
+
+export default connect(
+  mapStateToProps,
+  matchDispatchToProps
+)(withRouter(CreateEventPage));

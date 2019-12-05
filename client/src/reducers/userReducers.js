@@ -24,11 +24,17 @@ import {
   ATTEMPT_EDIT_EVENT_SUCCESSFULLY,
   ATTEMPT_GET_RESULT_FAILED,
   ATTEMPT_GET_RESULT_SUCCESSFULLY,
+<<<<<<< HEAD
   ATTEMPT_GET_EVENT_SUCCESSFULLY,
   ATTEMPT_GET_EVENT_FAILED,
   ATTEMPT_GET_PARTY_SUCCESSFULLY,
   ATTEMPT_GET_PARTY_FAILED
 } from "../constant";
+=======
+  ATTEMPT_CREATE_EVENT_FAILED,
+  ATTEMPT_CREATE_EVENT_SUCCESSFULLY
+} from '../constant';
+>>>>>>> complete create-event function
 
 export default function(state = { loading: false, errors: null }, action) {
   switch (action.type) {
@@ -58,6 +64,10 @@ export default function(state = { loading: false, errors: null }, action) {
     case ATTEMPT_CONTRIBUTE_SUCCESSFULLY:
       return { ...state, list: action.payload, ...{ loading: false } };
     case ATTEMPT_CONTRIBUTE_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+    case ATTEMPT_CREATE_EVENT_SUCCESSFULLY:
+      return { ...state, createdEvent: action.payload, ...{ loading: false } };
+    case ATTEMPT_CREATE_EVENT_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
 
     case ATTEMPT_EDIT_EVENT_SUCCESSFULLY:
