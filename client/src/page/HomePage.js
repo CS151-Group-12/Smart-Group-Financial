@@ -1,13 +1,14 @@
-import React, { Component } from "react";
-import { Redirect, withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import { attemptGetPartiesByUserId } from "../apiCall/party/getPartiesByUserIdApiCall";
-import { attemptGetEventsByUserId } from "../apiCall/event/getEventsByUserIdApiCall";
+import { attemptGetPartiesByUserId } from '../apiCall/party/getPartiesByUserIdApiCall';
+import { attemptGetEventsByUserId } from '../apiCall/event/getEventsByUserIdApiCall';
 
-import EventsListHome from "../components/party/EventsListHome.js";
-import PartiesListHome from "../components/party/PartiesListHome.js";
+import EventsListHome from '../components/party/EventsListHome.js';
+import PartiesListHome from '../components/party/PartiesListHome.js';
+import { getTokenFromLocalStorage } from '../utils';
 
 class HomePage extends Component {
   constructor(props) {
@@ -23,9 +24,10 @@ class HomePage extends Component {
     this.setState({ ...this.state, ...{ selectedRow } });
   }
 
-  componentDidMount() {
-    this.props.attemptGetEventsByUserId();
-    this.props.attemptGetPartiesByUserId();
+  async componentDidMount() {
+    const userID = getTokenFromLocalStorage('userID') || this.props.user.userID;
+    this.props.attemptGetEventsByUserId({ userID: userID });
+    this.props.attemptGetPartiesByUserId({ userID: userID });
   }
 
   render() {

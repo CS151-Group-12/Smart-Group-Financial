@@ -62,6 +62,7 @@ class EventPage extends Component {
     const list = user.list || {};
     const categoryArray = Object.keys(list).map(i => list[i]);
     let i = 1;
+
     categoryArray.map(categoryItem => {
       const newCategory = [
         i,

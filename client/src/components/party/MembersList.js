@@ -4,23 +4,23 @@ import AddMemberModal from './addMemberModal';
 const MembersList = props => {
   return (
     <div className='container'>
-      <div class='row valign-wrapper'>
-        <div class='col s5'>
+      <div className='row valign-wrapper'>
+        <div className='col s5'>
           <h3> Party Members </h3>
         </div>
         <AddMemberModal partyID={props.partyID} invite={props.invite} />
       </div>
       <hr></hr>
-      <ul class='collection with-header'>
+      <ul className='collection with-header'>
         {props.members.map(member => (
-          <li class='collection-item'>
+          <li className='collection-item'>
             <div>
               {member.email}
               <button
-                class='secondary-content valign-wrapper'
+                className='secondary-content valign-wrapper'
                 onClick={() => props.delete(member.userID)}
               >
-                <i class='material-icons'>remove</i>
+                <i className='material-icons'>remove</i>
               </button>
             </div>
           </li>

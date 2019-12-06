@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect, withRouter } from 'react-router-dom';
 
-import { attemptCreateParty } from '../apiCall/party/createPartyApiCall';
+import { attemptJoinParty } from '../apiCall/party/joinPartyApiCall';
 import { getTokenFromLocalStorage } from '../utils';
-import CreateParty from '../components/party/CreateParty';
+import JoinParty from '../components/party/JoinParty';
 
-class CreatePartyPage extends Component {
+class JoinPartyPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -24,7 +24,7 @@ class CreatePartyPage extends Component {
 
   handleParty = e => {
     e.preventDefault();
-    this.props.attemptCreateParty({
+    this.props.attemptJoinParty({
       name: this.state.name,
       userID: getTokenFromLocalStorage('userID')
     });
@@ -34,12 +34,13 @@ class CreatePartyPage extends Component {
     const user = this.props.user || {};
     const name = { ...this.state.name };
 
-    const { createdParty } = user;
-    return createdParty ? (
-      <Redirect to={`/party/${createdParty[0].partyID}`} />
+    const { foundParty } = user;
+    return foundParty ? (
+      <Redirect to={`/party/${foundParty[0].partyID}`} />
     ) : (
+      // return (
       <div>
-        <CreateParty
+        <JoinParty
           name={name}
           onChange={e => this.onChange(e)}
           onClick={e => this.handleParty(e)}
@@ -56,10 +57,10 @@ function mapStateToProps(state) {
 }
 
 function matchDispatchToProps(dispatch) {
-  return bindActionCreators({ attemptCreateParty }, dispatch);
+  return bindActionCreators({ attemptJoinParty }, dispatch);
 }
 
 export default connect(
   mapStateToProps,
   matchDispatchToProps
-)(withRouter(CreatePartyPage));
+)(withRouter(JoinPartyPage));

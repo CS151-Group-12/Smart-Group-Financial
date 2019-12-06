@@ -1,17 +1,17 @@
-import express from "express";
-import bcrypt from "bcrypt";
+import express from 'express';
+import bcrypt from 'bcrypt';
 
-import passport from "passport";
+import passport from 'passport';
 const userController = express.Router();
 
 function getUserByEmailQuery(email) {
   return `SELECT userID, email from User WHERE email LIKE '${email}'`;
 }
 
-userController.get("/", (req, res) => {
-  db.query("SELECT * from User", (err, data, fields) => {
+userController.get('/', (req, res) => {
+  db.query('SELECT * from User', (err, data, fields) => {
     if (err) {
-      console.log("Error while performing Query." + err);
+      console.log('Error while performing Query.' + err);
     } else {
       const returnData = { ...data };
       res.status(200).json(returnData);
@@ -19,17 +19,17 @@ userController.get("/", (req, res) => {
   });
 });
 
-userController.post("/", (req, res) => {
-  res.status(200).json({ data: "" });
+userController.post('/', (req, res) => {
+  res.status(200).json({ data: '' });
 });
 
-userController.post("/register", (req, res) => {
+userController.post('/register', (req, res) => {
   const { email, password } = req.body;
   db.query(getUserByEmailQuery(email), (err, foundEmail, fields2) => {
     if (err) res.status(500).json(err);
     else {
       if (foundEmail.length > 0) {
-        res.status(400).json({ message: "Email already existed" });
+        res.status(400).json({ message: 'Email already existed' });
       } else {
         bcrypt.hash(password, 10, (err, hashedPassword) => {
           const createUserQuery = `INSERT into User(email, password) values('${email}', '${hashedPassword}')`;
@@ -38,9 +38,9 @@ userController.post("/register", (req, res) => {
             else {
               db.query(
                 getUserByEmailQuery(email),
-                (err3, userDatas, fields2) => {
+                (err3, foundUser, fields2) => {
                   if (err3) res.status(500).json(err3);
-                  res.status(200).json({ ...userDatas[0] });
+                  res.status(200).json(...foundUser);
                 }
               );
             }
@@ -51,50 +51,21 @@ userController.post("/register", (req, res) => {
   });
 });
 
-userController.get("/login-failed", (req, res) => {
-  res.status(403).json({ message: "User enter wrong password" });
+userController.get('/login-failed', (req, res) => {
+  res.status(403).json({ message: 'User enter wrong password' });
 });
 
 userController.post(
-  "/login",
-  passport.authenticate("local", {
-    failureRedirect: "/login-failed"
+  '/login',
+  passport.authenticate('local', {
+    failureRedirect: '/login-failed'
   }),
   (req, res) => {
     const { email } = req.body;
     db.query(getUserByEmailQuery(email), (err2, foundUser) => {
       if (err2) res.status(500).json(err2);
       else {
-        const getEventQuery = `SELECT eventID, name, startDate, endDate, email FROM Event
-      JOIN User_Join_Event USING(eventID)
-      JOIN (SELECT userID, email from User WHERE userID LIKE ${foundUser[0].userID}) userTable USING (userID);`;
-
-        db.query(getEventQuery, (err, eventList) => {
-          if (err) {
-            console.log("Error while performing Query." + err);
-          } else {
-            const eventData = [...eventList];
-            const query = `SELECT partyID, name, email FROM Party
-                  JOIN User_Join_Party USING(partyID)
-                  JOIN (SELECT userID, email from User WHERE userID LIKE ${foundUser[0].userID}) userTable USING(userID);`;
-
-            db.query(query, (err, data) => {
-              if (err) {
-                console.log("Error while performing Query." + err);
-              } else {
-                const returnData = [...data];
-                console.log();
-                res
-                  .status(200)
-                  .json({
-                    ...foundUser[0],
-                    eventList: eventData,
-                    partyList: returnData
-                  });
-              }
-            });
-          }
-        });
+        res.status(200).json(...foundUser);
       }
     });
   }

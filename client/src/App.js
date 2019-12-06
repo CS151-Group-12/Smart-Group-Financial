@@ -35,7 +35,7 @@ class App extends Component {
 
     return isLogin ? (
       <div>
-        <CustomNavbar onClick={this.logout} user={user}/>
+        <CustomNavbar user={user} />
         <RouterComponent isLogin={isLogin} user={user} />
       </div>
     ) : (
@@ -55,7 +55,7 @@ function mapStateToProps(state) {
 function matchDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      setUserToken: setUserToken
+      setUserToken
     },
     dispatch
   );

@@ -12,8 +12,6 @@ export const attemptGetPartyEvents = partyData => dispatch => {
   return axios
     .post(`${HOST}${PARTY_URI + '/events'}`, partyData)
     .then(res => {
-      console.log('attempt get events callAPI');
-      console.log(res.data);
       const payload = dispatch(attemptGetPartyEventsSuccessfully(res.data));
       return payload;
     })

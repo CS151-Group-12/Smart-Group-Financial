@@ -6,6 +6,7 @@ import EditCategoryModal from './EditCategory/EditCategoryModal';
 const Event = props => {
   return (
     <div className='container'>
+      <h3>Event ID: {props.eventID}</h3>
       <MUIDataTable
         title={'Category Table'}
         data={props.data}

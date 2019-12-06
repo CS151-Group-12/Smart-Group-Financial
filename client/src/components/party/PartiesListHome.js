@@ -1,38 +1,36 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const PartiesListHome = props => {
   return (
-    <div>
-      <div className="col s6 container valign-wrapper">
-        <div className="col s12">
+    <div className='container'>
+      <div className='col s6 valign-wrapper'>
+        <div className='col s12'>
           <h3
             style={{
-              fontFamily: "monospace"
+              fontFamily: 'monospace'
             }}
-            className="brand-logo black-text"
+            className='brand-logo black-text'
           >
             My Parties
           </h3>
         </div>
       </div>
       <hr></hr>
-      <div className="row">
+      <div className='row'>
         {props.parties.map(party => (
-          <div className="col s1 m3">
-            <div className="card small teal darken-2 z-depth-3">
-              <div className="card-content white-text">
-                {/* <span className="card-title">{party.name}</span> */}
+          <div className='col s1 m3'>
+            <div className='card small teal darken-2 z-depth-3'>
+              <div className='card-content white-text'>
                 <ul>
-                  <li>{party.name}</li>
-                  {/* <li>Start Date: {even.startDate}</li>
-                  <li>End Date: {event.endDate}</li> */}
+                  <li>Name: {party.name}</li>
+                  {/* <li>Total Members: {party.totalMember}</li> */}
                 </ul>
               </div>
-              <div className="card-action">
+              <div className='card-action'>
                 <Link
                   to={{
-                    pathname: "/party/" + party.partyID
+                    pathname: '/party/' + party.partyID
                   }}
                 >
                   View
