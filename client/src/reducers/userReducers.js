@@ -11,8 +11,6 @@ import {
   ATTEMPT_GET_PARTY_MEMBERS_SUCCESSFULLY,
   ATTEMPT_GET_PARTY_EVENTS_FAILED,
   ATTEMPT_GET_PARTY_EVENTS_SUCCESSFULLY,
-  ATTEMPT_INVITE_PARTY_MEMBER_FAILED,
-  ATTEMPT_INVITE_PARTY_MEMBER_SUCCESSFULLY,
   ATTEMPT_CALCULATE_FAILED,
   ATTEMPT_CALCULATE_SUCCESSFULLY,
   ATTEMPT_CONTRIBUTE_FAILED,
@@ -24,17 +22,19 @@ import {
   ATTEMPT_EDIT_EVENT_SUCCESSFULLY,
   ATTEMPT_GET_RESULT_FAILED,
   ATTEMPT_GET_RESULT_SUCCESSFULLY,
-<<<<<<< HEAD
   ATTEMPT_GET_EVENT_SUCCESSFULLY,
   ATTEMPT_GET_EVENT_FAILED,
   ATTEMPT_GET_PARTY_SUCCESSFULLY,
-  ATTEMPT_GET_PARTY_FAILED
-} from "../constant";
-=======
+  ATTEMPT_GET_PARTY_FAILED,
   ATTEMPT_CREATE_EVENT_FAILED,
-  ATTEMPT_CREATE_EVENT_SUCCESSFULLY
+  ATTEMPT_CREATE_EVENT_SUCCESSFULLY,
+  ATTEMPT_CREATE_PARTY_FAILED,
+  ATTEMPT_CREATE_PARTY_SUCCESSFULLY,
+  ATTEMPT_JOIN_PARTY_FAILED,
+  ATTEMPT_JOIN_PARTY_SUCCESSFULLY,
+  ATTEMPT_JOIN_EVENT_FAILED,
+  ATTEMPT_JOIN_EVENT_SUCCESSFULLY
 } from '../constant';
->>>>>>> complete create-event function
 
 export default function(state = { loading: false, errors: null }, action) {
   switch (action.type) {
@@ -70,6 +70,21 @@ export default function(state = { loading: false, errors: null }, action) {
     case ATTEMPT_CREATE_EVENT_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
 
+    case ATTEMPT_CREATE_PARTY_SUCCESSFULLY:
+      return { ...state, createdParty: action.payload, ...{ loading: false } };
+    case ATTEMPT_CREATE_PARTY_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+
+    case ATTEMPT_JOIN_PARTY_SUCCESSFULLY:
+      return { ...state, foundParty: action.payload, ...{ loading: false } };
+    case ATTEMPT_JOIN_PARTY_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+
+    case ATTEMPT_JOIN_EVENT_SUCCESSFULLY:
+      return { ...state, foundEvent: action.payload, ...{ loading: false } };
+    case ATTEMPT_JOIN_EVENT_FAILED:
+      return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
+
     case ATTEMPT_EDIT_EVENT_SUCCESSFULLY:
       return { ...state, list: action.payload, ...{ loading: false } };
     case ATTEMPT_EDIT_EVENT_FAILED:
@@ -90,17 +105,25 @@ export default function(state = { loading: false, errors: null }, action) {
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
 
     case ATTEMPT_GET_RESULT_SUCCESSFULLY:
-      return { ...state, eventList: action.payload, ...{ loading: false } };
+      return { ...state, resultList: action.payload, ...{ loading: false } };
     case ATTEMPT_GET_RESULT_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
 
     case ATTEMPT_GET_EVENT_SUCCESSFULLY:
-      return { ...state, eventList: action.payload, ...{ loading: false } };
+      return {
+        ...state,
+        eventList: action.payload,
+        ...{ loading: false }
+      };
     case ATTEMPT_GET_EVENT_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
 
     case ATTEMPT_GET_PARTY_SUCCESSFULLY:
-      return { ...state, partyList: action.payload, ...{ loading: false } };
+      return {
+        ...state,
+        partyList: action.payload,
+        ...{ loading: false }
+      };
     case ATTEMPT_GET_PARTY_FAILED:
       return { ...state, ...{ loading: false }, ...{ errors: action.payload } };
     case ATTEMPT_LOGOUT:

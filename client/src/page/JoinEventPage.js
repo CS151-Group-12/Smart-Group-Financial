@@ -3,18 +3,18 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect, withRouter } from 'react-router-dom';
 
-import { attemptCreateParty } from '../apiCall/party/createPartyApiCall';
+import { attemptJoinEvent } from '../apiCall/event/joinEventApiCall';
 import { getTokenFromLocalStorage } from '../utils';
-import CreateParty from '../components/party/CreateParty';
+import JoinEvent from '../components/event/JoinEvent';
 
-class CreatePartyPage extends Component {
+class JoinEventPage extends Component {
   constructor() {
     super();
     this.state = {
       name: ''
     };
 
-    this.handleParty = this.handleParty.bind(this);
+    this.joinEvent = this.joinEvent.bind(this);
     this.onChange = this.onChange.bind(this);
   }
 
@@ -22,9 +22,9 @@ class CreatePartyPage extends Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  handleParty = e => {
+  joinEvent = e => {
     e.preventDefault();
-    this.props.attemptCreateParty({
+    this.props.attemptJoinEvent({
       name: this.state.name,
       userID: getTokenFromLocalStorage('userID')
     });
@@ -34,15 +34,16 @@ class CreatePartyPage extends Component {
     const user = this.props.user || {};
     const name = { ...this.state.name };
 
-    const { createdParty } = user;
-    return createdParty ? (
-      <Redirect to={`/party/${createdParty[0].partyID}`} />
+    const { foundEvent } = user;
+    return foundEvent ? (
+      <Redirect to={`/event/${foundEvent[0].eventID}`} />
     ) : (
+      // return (
       <div>
-        <CreateParty
+        <JoinEvent
           name={name}
           onChange={e => this.onChange(e)}
-          onClick={e => this.handleParty(e)}
+          onClick={e => this.joinEvent(e)}
         />
       </div>
     );
@@ -56,10 +57,10 @@ function mapStateToProps(state) {
 }
 
 function matchDispatchToProps(dispatch) {
-  return bindActionCreators({ attemptCreateParty }, dispatch);
+  return bindActionCreators({ attemptJoinEvent }, dispatch);
 }
 
 export default connect(
   mapStateToProps,
   matchDispatchToProps
-)(withRouter(CreatePartyPage));
+)(withRouter(JoinEventPage));

@@ -12,6 +12,8 @@ import EventPage from '../page/EventPage';
 import ResultsPage from '../page/ResultsPage';
 import CreatePartyPage from '../page/CreatePartyPage';
 import CreateEventPage from '../page/CreateEventPage';
+import JoinPartyPage from '../page/JoinPartyPage';
+import JoinEventPage from '../page/JoinEventPage';
 
 class RoutesComponent extends Component {
   convertToPrivateComponent(component) {
@@ -43,13 +45,15 @@ class RoutesComponent extends Component {
           component={this.convertToPrivateComponent(PartyPage)}
         />
         <Route
-          exact
-          path='/createparty/:userID'
-          component={this.convertToPrivateComponent(CreatePartyPage)}
+          path='/join-party/'
+          component={this.convertToPrivateComponent(JoinPartyPage)}
         />
         <Route
-          exact
-          path='/createparty'
+          path='/join-event/'
+          component={this.convertToPrivateComponent(JoinEventPage)}
+        />
+        <Route
+          path='/create-party/'
           component={this.convertToPrivateComponent(CreatePartyPage)}
         />
         <Route

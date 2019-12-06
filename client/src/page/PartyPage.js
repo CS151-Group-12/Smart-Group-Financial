@@ -56,6 +56,7 @@ class PartyPage extends Component {
 
   addEvent = data => {
     this.props.attemptCreatePartyEvent(data).then(res => {
+      console.log(res);
       this.setState({ events: res.payload });
     });
   };

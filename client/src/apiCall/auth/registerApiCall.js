@@ -15,8 +15,8 @@ export const attemptRegister = userData => dispatch => {
     .post(`${HOST}${REGISTER_URI}`, userData)
     .then(res => {
       // Set userToken to Local Storage
-      setTokenToLocalStorage(USER_ID, res.data.insertId);
-
+      setTokenToLocalStorage(USER_ID, res.data.userID);
+      setTokenToLocalStorage('EMAIL', res.data.email);
       dispatch(attemptRegisterSuccessfully(res.data));
     })
     .catch(err => {

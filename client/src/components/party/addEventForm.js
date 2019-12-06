@@ -7,6 +7,8 @@ class AddMemberForm extends Component {
       partyID: this.props.partyID,
       create: this.props.create,
       email: '',
+      endDate: '',
+      startDate: '',
       errors: {}
     };
 
@@ -21,14 +23,14 @@ class AddMemberForm extends Component {
     return (
       <div className='container'>
         <div className='row'>
-          <div className='col-md-6 mt-5 mx-auto'>
+          <div class='col-md-6 mt-5 mx-auto'>
             <form noValidate>
               <h5 className='h3 mb-3 font-weight-normal'>New Event</h5>
               <div className='form-party'>
                 <label htmlFor='name'>Name of Event</label>
                 <input
                   type='text'
-                  className='form-control'
+                  class='form-control'
                   name='name'
                   placeholder='Enter Name'
                   value={this.state.name}
@@ -54,6 +56,17 @@ class AddMemberForm extends Component {
                   name='endDate'
                   placeholder='End'
                   value={this.state.endDate}
+                  onChange={this.onChange}
+                />
+              </div>
+              <div className='form-party'>
+                <label htmlFor='date'>Location</label>
+                <input
+                  type='text'
+                  className='form-control'
+                  name='location'
+                  placeholder='Location'
+                  value={this.state.location}
                   onChange={this.onChange}
                 />
               </div>

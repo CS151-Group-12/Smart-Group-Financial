@@ -4,19 +4,24 @@ import { connect } from 'react-redux';
 
 import { bindActionCreators } from 'redux';
 import { attemptLogout } from '../../actions/auth/attemptLogoutAction';
+import { getTokenFromLocalStorage } from '../../utils';
 
 class CustomNavbar extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      name: getTokenFromLocalStorage('EMAIL')
+    };
   }
 
   logout() {
     localStorage.removeItem(USER_ID);
+    localStorage.removeItem('EMAIL');
     this.props.attemptLogout();
   }
+
   render() {
-    const user = this.props.user || {};
-    const { email } = user;
+    const email = getTokenFromLocalStorage('EMAIL');
     return (
       <div className='navbar-fixed'>
         <nav className='z-depth-0'>
@@ -32,7 +37,40 @@ class CustomNavbar extends Component {
             <ul className='right'>
               <li>
                 <a
-                  href={'/createparty/'+this.props.user.userID}
+                  href='#'
+                  style={{
+                    fontFamily: 'monospace'
+                  }}
+                  className=' right black-text'
+                >
+                  Welcome {email}
+                </a>
+              </li>
+              <li>
+                <a
+                  href='/join-event'
+                  style={{
+                    fontFamily: 'monospace'
+                  }}
+                  className=' right black-text'
+                >
+                  Join Event
+                </a>
+              </li>
+              <li>
+                <a
+                  href='/join-party'
+                  style={{
+                    fontFamily: 'monospace'
+                  }}
+                  className=' right black-text'
+                >
+                  Join Party
+                </a>
+              </li>
+              <li>
+                <a
+                  href='/create-party'
                   style={{
                     fontFamily: 'monospace'
                   }}
